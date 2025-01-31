@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Termix</string>
+    <string name="btn_daily_game">Jogo Diário</string>
+    <string name="btn_minigames">Minijogos</string>
+    <string name="desc_back_to_home_screen">Voltar para a tela inicial</string>
+    <string name="desc_rules">Regras do jogo</string>
+    <string name="desc_profile">Perfil do jogador</string>
+    <string name="title_daily_game">Termix Diário</string>
+    <string name="title_minigames">Minijogos</string>
+    <string name="infinite_minigame">Modo Infinito</string>
+    <string name="time_limit_minigame">Limite de Tempo</string>
+    <string name="termix_turbo_minigame">Termix Turbo</string>
+    <string name="profile_title">Perfil</string>
+</resources>

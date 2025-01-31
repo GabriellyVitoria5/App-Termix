@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MinigamesHome">
+
+    <ImageButton
+        android:id="@+id/back_to_home_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/left_arrow"
+        android:contentDescription="@string/desc_back_to_home_screen"
+        android:padding="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/profile_btn"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="36dp"
+        android:background="@drawable/baseline_account_circle_24"
+        android:contentDescription="@string/desc_profile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/title_minigame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_minigames"
+        android:textSize="@dimen/font_44"
+        android:textStyle="bold"
+        android:layout_marginTop="@dimen/margin_52"
+        app:layout_constraintBottom_toTopOf="@id/infinite_minigame_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/infinite_minigame_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/infinite_minigame"
+        android:textSize="@dimen/font_40"
+        android:layout_marginStart="@dimen/margin_32"
+        android:layout_marginEnd="@dimen/margin_32"
+        app:layout_constraintBottom_toTopOf="@+id/time_minigame_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_minigame" />
+
+    <Button
+        android:id="@+id/time_minigame_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/time_limit_minigame"
+        android:textSize="@dimen/font_40"
+        android:layout_marginStart="@dimen/margin_28"
+        android:layout_marginEnd="@dimen/margin_28"
+        app:layout_constraintTop_toBottomOf="@+id/infinite_minigame_btn"
+        app:layout_constraintBottom_toTopOf="@+id/termix_turbo_minigame_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/termix_turbo_minigame_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/termix_turbo_minigame"
+        android:textSize="@dimen/font_40"
+        android:layout_marginStart="@dimen/margin_32"
+        android:layout_marginEnd="@dimen/margin_32"
+        app:layout_constraintTop_toBottomOf="@+id/time_minigame_btn"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="font_40">40sp</dimen>
+    <dimen name="font_44">44sp</dimen>
+    <dimen name="font_52">52sp</dimen>
+    <dimen name="font_64">64sp</dimen>
+    <dimen name="margin_28">28dp</dimen>
+    <dimen name="margin_32">32dp</dimen>
+    <dimen name="margin_52">52dp</dimen>
+</resources>

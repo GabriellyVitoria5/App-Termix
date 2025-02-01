@@ -33,13 +33,13 @@ class TimeLimitMinigame : AppCompatActivity() {
     private fun registerButtonEvents(){
 
         // Voltar à tela de minijogos
-        tileLimiteMinigameBinding.backToHomeBtn.setOnClickListener {
+        tileLimiteMinigameBinding.backToHomeTimeLimitBtn.setOnClickListener {
             val intent = Intent(this, MinigamesHome::class.java)
             startActivity(intent)
         }
 
         // Mover para a activity do perfil do jogador
-        tileLimiteMinigameBinding.profileBtn.setOnClickListener {
+        tileLimiteMinigameBinding.profileTimeLimiteBtn.setOnClickListener {
             val intent = Intent(this, Profile::class.java)
             startActivity(intent)
         }

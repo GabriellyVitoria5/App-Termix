@@ -33,13 +33,13 @@ class TermixTurboMinigame : AppCompatActivity() {
     private fun registerButtonEvents(){
 
         // Voltar à tela de minijogos
-        termixTurboMinigameBinding.backToHomeBtn.setOnClickListener {
+        termixTurboMinigameBinding.backToHomeTurboBtn.setOnClickListener {
             val intent = Intent(this, MinigamesHome::class.java)
             startActivity(intent)
         }
 
         // Mover para a activity do perfil do jogador
-        termixTurboMinigameBinding.profileBtn.setOnClickListener {
+        termixTurboMinigameBinding.profileTurboBtn.setOnClickListener {
             val intent = Intent(this, Profile::class.java)
             startActivity(intent)
         }

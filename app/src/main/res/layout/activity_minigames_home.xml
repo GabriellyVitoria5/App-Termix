@@ -8,7 +8,7 @@
     tools:context=".MinigamesHome">
 
     <ImageButton
-        android:id="@+id/back_to_home_btn"
+        android:id="@+id/back_to_home_minigame_home_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -21,8 +21,8 @@
 
     <ImageButton
         android:id="@+id/profile_btn"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="36dp"
         android:background="@drawable/baseline_account_circle_24"
@@ -37,7 +37,7 @@
         android:text="@string/title_minigames"
         android:textSize="@dimen/font_44"
         android:textStyle="bold"
-        android:layout_marginTop="@dimen/margin_52"
+        android:layout_marginTop="64dp"
         app:layout_constraintBottom_toTopOf="@id/infinite_minigame_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"

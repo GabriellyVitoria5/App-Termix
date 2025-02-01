@@ -36,7 +36,7 @@ class DailyGame : AppCompatActivity() {
 
     // Criar a grade com as letras: linhas são as palavras que o usuário vai inserir, colunas são as tentativas usadas para acertar a palavra
     private fun createLettersGrid(){
-        letterGrid = LettersGrid(this, dailyGameBinding.lettersGrid)
+        letterGrid = LettersGrid(this, dailyGameBinding.lettersGridDaily)
         letterGrid.createGrid()
     }
 
@@ -44,13 +44,13 @@ class DailyGame : AppCompatActivity() {
     private fun registerButtonEvents(){
 
         // Voltar à tela inicial
-        dailyGameBinding.backToHomeBtn.setOnClickListener {
+        dailyGameBinding.backToHomeDailyBtn.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
 
         // Mover para a activity do perfil do jogador
-        dailyGameBinding.profileBtn.setOnClickListener {
+        dailyGameBinding.profileDailyBtn.setOnClickListener {
             val intent = Intent(this, Profile::class.java)
             startActivity(intent)
         }
@@ -61,7 +61,7 @@ class DailyGame : AppCompatActivity() {
             if (isCorrect) {
                 Toast.makeText(this, "Acertou!", Toast.LENGTH_LONG).show()
             } else if (letterGrid.currentRow == 6) {
-                Toast.makeText(this, "As tentativas acabaram! A palavra era $correctWord", Toast.LENGTH_LONG).show()
+                dailyGameBinding.answerTxt.text = "A resposta certa era: $correctWord"
             }
         }
     }

@@ -35,13 +35,13 @@ class InfiniteMinigame : AppCompatActivity() {
     private fun registerButtonEvents(){
 
         // Voltar à tela de minijogos
-        infiniteMinigameBinding.backToHomeBtn.setOnClickListener {
+        infiniteMinigameBinding.backToHomeInfiniteBtn.setOnClickListener {
             val intent = Intent(this, MinigamesHome::class.java)
             startActivity(intent)
         }
 
         // Mover para a activity do perfil do jogador
-        infiniteMinigameBinding.profileBtn.setOnClickListener {
+        infiniteMinigameBinding.profileInfiniteBtn.setOnClickListener {
             val intent = Intent(this, Profile::class.java)
             startActivity(intent)
         }

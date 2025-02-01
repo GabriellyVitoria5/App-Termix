@@ -52,7 +52,7 @@ class MinigamesHome : AppCompatActivity() {
         }
 
         // Mover para a activity inicial
-        minigameHomeBinding.backToHomeBtn.setOnClickListener {
+        minigameHomeBinding.backToHomeMinigameHomeBtn.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }

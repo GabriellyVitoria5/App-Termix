@@ -41,6 +41,7 @@ class LettersGrid(private val context: Context, private val gridLayout: GridLayo
             }
             editTextList.add(rowList)
         }
+        updateRowState()
     }
 
     // Bloquear e liberar linhas conforme regra do jogo: somente a linha da tentativa atual pode ser alterada, as demais devem ser bloqueadas

@@ -8,7 +8,7 @@
     tools:context=".DailyGame">
 
     <ImageButton
-        android:id="@+id/back_to_home_btn"
+        android:id="@+id/back_to_home_daily_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
-        android:id="@+id/rule_btn"
+        android:id="@+id/rule_daily_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -28,13 +28,13 @@
         android:background="@drawable/question_mark"
         android:contentDescription="@string/desc_rules"
         android:padding="15dp"
-        app:layout_constraintStart_toEndOf="@+id/back_to_home_btn"
+        app:layout_constraintStart_toEndOf="@+id/back_to_home_daily_btn"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
-        android:id="@+id/profile_btn"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:id="@+id/profile_daily_btn"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="36dp"
         android:background="@drawable/baseline_account_circle_24"
@@ -43,32 +43,42 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/title_daily"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
         android:text="@string/title_daily_game"
         android:textSize="@dimen/font_44"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.122" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/answer_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="@dimen/font_20"
+        android:layout_marginTop="@dimen/margin_20"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_daily"/>
 
     <GridLayout
-        android:id="@+id/lettersGrid"
+        android:id="@+id/letters_grid_daily"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_32"
         android:layout_marginEnd="@dimen/margin_32"
+        android:rowCount="6"
         android:columnCount="5"
         android:padding="4dp"
-        android:rowCount="6"
+        android:layout_marginTop="@dimen/margin_20"
         app:layout_constraintBottom_toBottomOf="@id/send_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/answer_txt" />
 
     <Button
         android:id="@+id/send_btn"
@@ -78,7 +88,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/lettersGrid"/>
+        app:layout_constraintTop_toBottomOf="@id/letters_grid_daily"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

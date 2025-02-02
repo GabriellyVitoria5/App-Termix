@@ -1,7 +1,6 @@
 package com.ifmg.termix
 
 import android.content.Context
-import android.graphics.Color
 import android.text.InputFilter
 import android.text.InputType
 import android.view.Gravity
@@ -13,7 +12,7 @@ class LettersGrid(private val context: Context, private val gridLayout: GridLayo
 
     private val rows = 6
     private val cols = 5
-    private val editTextList = mutableListOf<MutableList<EditText>>()
+    val editTextList = mutableListOf<MutableList<EditText>>()
     var currentRow = 0
 
     // Criar o layout da grade de letras na activity, cada letra será um campo de texto
@@ -21,13 +20,15 @@ class LettersGrid(private val context: Context, private val gridLayout: GridLayo
         for (row in 0 until rows) {
             val rowList = mutableListOf<EditText>()
             for (col in 0 until cols) {
+
+                // Criar o EditText
                 val editText = EditText(context).apply {
                     layoutParams = GridLayout.LayoutParams().apply {
                         width = 0
                         height = 148 // TODO Verificar tamanho da  grade
                         columnSpec = GridLayout.spec(col, 1f)
                         rowSpec = GridLayout.spec(row, 1f)
-                        setMargins(8, 16, 8, 4)
+                        setMargins(4, 4, 4, 4)
                     }
                     gravity = Gravity.CENTER
                     textSize = 24f
@@ -79,9 +80,9 @@ class LettersGrid(private val context: Context, private val gridLayout: GridLayo
             val editText = editTextList[currentRow][i]
 
             when {
-                letter == correctWord[i] -> editText.setBackgroundColor(Color.GREEN)
-                letter in correctWord -> editText.setBackgroundColor(Color.YELLOW)
-                else -> editText.setBackgroundColor(Color.GRAY)
+                letter == correctWord[i] -> editText.backgroundTintList = ContextCompat.getColorStateList(context, R.color.green)
+                letter in correctWord -> editText.backgroundTintList = ContextCompat.getColorStateList(context, R.color.yellow)
+                else -> editText.backgroundTintList = ContextCompat.getColorStateList(context, R.color.gray)
             }
         }
     }

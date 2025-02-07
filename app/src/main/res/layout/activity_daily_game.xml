@@ -46,13 +46,14 @@
         android:id="@+id/title_daily"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="76dp"
         android:text="@string/title_daily_game"
-        android:textSize="@dimen/font_44"
+        android:textSize="@dimen/font_40"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/answer_txt"/>
 
     <TextView
         android:id="@+id/answer_txt"
@@ -60,7 +61,6 @@
         android:layout_height="wrap_content"
         android:text=""
         android:textSize="@dimen/font_20"
-        android:layout_marginTop="@dimen/margin_12"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title_daily"
@@ -88,11 +88,13 @@
         android:columnCount="10"
         android:padding="8dp"
         android:rowCount="4"
-        android:layout_marginStart="@dimen/margin_28"
-        android:layout_marginEnd="@dimen/margin_28"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="@dimen/margin_32"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/letters_grid_daily" />
+        app:layout_constraintTop_toBottomOf="@+id/letters_grid_daily"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

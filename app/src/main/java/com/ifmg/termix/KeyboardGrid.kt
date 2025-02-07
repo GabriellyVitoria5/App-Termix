@@ -23,6 +23,7 @@ class KeyboardGrid(
 
     private val buttonsMap = mutableMapOf<String, Button>() // Mapeia as letras aos botões
     private val correctLetters = mutableSetOf<String>() // Letras que já foram confirmadas como verdes
+    private var enterButton: Button? = null // Botão enviar a resposta
 
     // Criar o layout da grade do teclado na activity, cada letra será um botão do teclado
     fun createKeyboard() {
@@ -38,11 +39,11 @@ class KeyboardGrid(
 
         // Botões especiais de apagar e enviar a palavra informada
         addButton("⌫", 2, 8, 2)
-        addButton("ENVIAR", 3, 0, 10)
+        enterButton = addButton("ENVIAR", 3, 0, 10)
     }
 
     // Adicionar os botões no teclado
-    private fun addButton(text: String, row: Int, col: Int, colSpan: Int = 1) {
+    private fun addButton(text: String, row: Int, col: Int, colSpan: Int = 1): Button {
 
         // Criar o botão
         val button = Button(context).apply {
@@ -56,7 +57,7 @@ class KeyboardGrid(
         // Parâmetros de layout do botão
         val params = GridLayout.LayoutParams().apply {
             rowSpec = GridLayout.spec(row, 1f)
-            columnSpec = GridLayout.spec(col, colSpan, 1f)
+            columnSpec = GridLayout.spec(col, colSpan, 2f)
             width = 0
             height = GridLayout.LayoutParams.WRAP_CONTENT
             setMargins(4, 8, 4, 8)
@@ -65,10 +66,9 @@ class KeyboardGrid(
         button.layoutParams = params
         gridLayout.addView(button)
 
-        // Adiciona ao mapa apenas se for uma letra
-        if (text.length == 1) {
-            buttonsMap[text] = button
-        }
+        buttonsMap[text] = button
+
+        return button
     }
 
     // Tratar os eventos dos botões
@@ -99,12 +99,24 @@ class KeyboardGrid(
                     correctWord.contains(letter) -> { // Letra está na palavra, mas em outra posição
                         button.backgroundTintList = ContextCompat.getColorStateList(context, R.color.yellow)
                     }
-                    else -> { // Letra não está na palavra errada, bloquear o botão dela no teclado
+                    else -> { // Letra não está na palavra errada
                         button.backgroundTintList = ContextCompat.getColorStateList(context, R.color.gray)
-                        button.isEnabled = false
                     }
                 }
             }
         }
+    }
+
+    // Bloquear todas as telcas do teclado criado
+    fun disableKeyboard() {
+        for (button in buttonsMap.values) {
+            button.isEnabled = false
+        }
+    }
+
+    // Bloquear e habilitar botão de enviar do teclado criado
+    fun setEnterButtonEnabled(enabled: Boolean) {
+        enterButton?.isEnabled = enabled
+        enterButton?.alpha = if (enabled) 1.0f else 0.5f
     }
 }

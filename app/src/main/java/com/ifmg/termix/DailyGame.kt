@@ -16,7 +16,7 @@ class DailyGame : AppCompatActivity() {
     private lateinit var letterGrid: LettersGrid
     private lateinit var keyboardGrid: KeyboardGrid
 
-    private val correctWord = "CARRO" // Palavra correta padrão para teste
+    private val correctWord = "SAULO" // Palavra correta padrão para teste
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,25 +60,42 @@ class DailyGame : AppCompatActivity() {
     // Inserir uma letra na grade com os EditText
     private fun insertLetter(letter: String) {
         val currentRowList = letterGrid.editTextList[letterGrid.currentRow]
-        for (editText in currentRowList) {
-            if (editText.text.isEmpty()) {
-                editText.setText(letter)
-                break
+
+        if (letterGrid.selectedColumn < currentRowList.size) {
+            currentRowList[letterGrid.selectedColumn].setText(letter)
+
+            // Restaurar fundo do campo anterior
+            currentRowList[letterGrid.selectedColumn].setBackgroundResource(R.drawable.background_edit_text_letter_grid)
+
+            // Mover para o próximo campo (se houver)
+            if (letterGrid.selectedColumn < currentRowList.size - 1) {
+                letterGrid.selectedColumn++
             }
+
+            // Destacar o novo campo selecionado
+            currentRowList[letterGrid.selectedColumn].setBackgroundResource(R.drawable.background_edit_text_selected)
         }
     }
 
-    // Apagar a última letra
+    // Apagar uma letra
     private fun deleteLetter() {
         val currentRowList = letterGrid.editTextList[letterGrid.currentRow]
-        for (i in currentRowList.indices.reversed()) {
-            if (currentRowList[i].text.isNotEmpty()) {
-                currentRowList[i].text.clear()
-                break
-            }
+        val selectedIndex = letterGrid.selectedColumn
+
+        // Se o campo tiver uma letra, ela será apagada, o foco só será alterado para o campo anterior se o atual estiver vazio
+        if (currentRowList[selectedIndex].text.isNotEmpty()) {
+            currentRowList[selectedIndex].text.clear()
+        } else if (selectedIndex > 0) {
+            letterGrid.selectedColumn--
+            currentRowList[letterGrid.selectedColumn].text.clear()
         }
+
+        // Restaurar fundo dos campos antes de destacar o atual
+        currentRowList.forEach { it.setBackgroundResource(R.drawable.background_edit_text_letter_grid) }
+        currentRowList[letterGrid.selectedColumn].setBackgroundResource(R.drawable.background_edit_text_selected)
     }
 
+    // TODO: Criar classe intermediária que cuida do fluxo do jogo
     // Enviar a palavra que o usuário informou nos campos
     private fun submitWord() {
         val currentRowList = letterGrid.editTextList[letterGrid.currentRow]
@@ -89,13 +106,19 @@ class DailyGame : AppCompatActivity() {
             return
         }
 
+        letterGrid.clearSelection()
+
         val isCorrect = letterGrid.confirmWord(correctWord)
         keyboardGrid.updateKeyboardColors(guess, correctWord)
 
+        // Verificar a resposta e bloquear o botão para não permitir enviar mais palavras
         if (isCorrect) {
             Toast.makeText(this, "Acertou!", Toast.LENGTH_LONG).show()
+            keyboardGrid.setEnterButtonEnabled(false)
         } else if (letterGrid.currentRow == 6) {
             dailyGameBinding.answerTxt.text = "A resposta certa era: $correctWord"
+            keyboardGrid.setEnterButtonEnabled(false)
+            letterGrid.blockRow()
         }
     }
 

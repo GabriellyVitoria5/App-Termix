@@ -16,7 +16,7 @@ class DailyGame : AppCompatActivity() {
     private lateinit var letterGrid: LettersGrid
     private lateinit var keyboardGrid: KeyboardGrid
 
-    private val correctWord = "SAULO" // Palavra correta padrão para teste
+    private val correctWord = "CARRO" // Palavra correta padrão para teste
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

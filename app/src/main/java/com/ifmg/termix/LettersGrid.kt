@@ -44,12 +44,13 @@ class LettersGrid(private val context: Context, private val gridLayout: GridLayo
 
                     // Evento de clique para selecionar o índice do EditText clicado
                     setOnClickListener {
-                        if (row == currentRow) { // Permite seleção apenas na linha atual
+
+                        // Destacar o campo atual
+                        if (row == currentRow) {
                             // Restaurar fundo dos outros campos e atualizar coluna
                             editTextList[currentRow].forEach { it.setBackgroundResource(R.drawable.background_edit_text_letter_grid) }
                             selectedColumn = col
 
-                            // Aplicar destaque visual apenas no editText selecionado
                             setBackgroundResource(R.drawable.background_edit_text_selected)
                         }
                     }
@@ -70,7 +71,10 @@ class LettersGrid(private val context: Context, private val gridLayout: GridLayo
         colorLetters(userWord, correctWord)
 
         // Usuário acertou a palavra
-        if (userWord == correctWord) return true
+        if (userWord == correctWord) {
+            currentRow++
+            return true
+        }
 
         // Se usuário errar a palavra, bloquear a linha atual, ir para a próxima e atualizar o foco no primeiro campo da linha
         currentRow++
@@ -84,19 +88,41 @@ class LettersGrid(private val context: Context, private val gridLayout: GridLayo
     }
 
     // Colorir as letras da palavra informada pelo usuário conforme a regra:
-    // Verde - posição correta; Amarela - Existe, mas não nessa posição; Cinza - não existe na palavra
+    // Verde - posição correta; Amarela - Existe, mas não nessa posição; Cinza - não existe na palavra e caso especial de ocorrência das letras
     private fun colorLetters(userWord: String, correctWord: String) {
+        val letterCounts = mutableMapOf<Char, Int>()
+
+        // Contar quantas vezes cada letra aparece na palavra correta
+        for (letter in correctWord) {
+            letterCounts[letter] = letterCounts.getOrDefault(letter, 0) + 1
+        }
+
+        // Marcar letras corretas
         for (i in 0 until cols) {
             val letter = userWord[i]
             val editText = editTextList[currentRow][i]
 
-            when {
-                letter == correctWord[i] -> editText.backgroundTintList = ContextCompat.getColorStateList(context, R.color.green)
-                letter in correctWord -> editText.backgroundTintList = ContextCompat.getColorStateList(context, R.color.yellow)
-                else -> editText.backgroundTintList = ContextCompat.getColorStateList(context, R.color.gray)
+            if (letter == correctWord[i]) {
+                editText.backgroundTintList = ContextCompat.getColorStateList(context, R.color.green)
+                letterCounts[letter] = letterCounts[letter]!! - 1 // Reduz uma ocorrência
+            }
+        }
+
+        // Marcar letras que estão na posição errada de amarelo
+        for (i in 0 until cols) {
+            val letter = userWord[i]
+            val editText = editTextList[currentRow][i]
+
+            //Caso especial: se a palavra tiver letras iguais repetidas, se o usuário acertar somente a posição de uma delas, colocar em amarelo para indicar que ainda há uma letra igual a essa na palavra
+            if (letter != correctWord[i] && letter in correctWord && letterCounts[letter]!! > 0) {
+                editText.backgroundTintList = ContextCompat.getColorStateList(context, R.color.yellow)
+                letterCounts[letter] = letterCounts[letter]!! - 1 // Reduz uma ocorrência
+            } else if (editText.backgroundTintList == null) { // Se usuário já acertou a posição de uma letra e repete ela em outra posição, indicar que essa letra não aparece mais na palavra
+                editText.backgroundTintList = ContextCompat.getColorStateList(context, R.color.gray)
             }
         }
     }
+
 
     // Adicionar um fundo de seleção na primeira coluna da linha atual
     private fun addSelectionInFirstColumn() {

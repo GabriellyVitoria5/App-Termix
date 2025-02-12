@@ -6,6 +6,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.ifmg.termix.controller.WordController
 import com.ifmg.termix.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -15,6 +16,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        // Popula o banco na primeira execução
+        val gameController = WordController(this)
+        gameController.loadWordsIfFirstRun()
+        gameController.showRandomWord()
 
         // Inflar os componentes da interface
         mainBinding = ActivityMainBinding.inflate(layoutInflater)

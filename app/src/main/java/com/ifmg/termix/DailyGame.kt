@@ -57,6 +57,7 @@ class DailyGame : AppCompatActivity() {
     }
 
     // TODO Criar classe intermediária para adicionar os eventos dos botões para não ficar na classe da activity
+    // TODO IndexOutOfBoundsException: Index 6 out of bounds for length 6
     // Inserir uma letra na grade com os EditText
     private fun insertLetter(letter: String) {
         val currentRowList = letterGrid.editTextList[letterGrid.currentRow]

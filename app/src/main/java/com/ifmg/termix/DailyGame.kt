@@ -7,16 +7,19 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.ifmg.termix.controller.GameController
 import com.ifmg.termix.databinding.ActivityDailyGameBinding
 
 class DailyGame : AppCompatActivity() {
 
     private lateinit var dailyGameBinding: ActivityDailyGameBinding
 
+    private lateinit var gameController: GameController
+
     private lateinit var letterGrid: LettersGrid
     private lateinit var keyboardGrid: KeyboardGrid
 
-    private val correctWord = "CARRO" // Palavra correta padrão para teste
+    private lateinit var correctWord: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +39,9 @@ class DailyGame : AppCompatActivity() {
         registerButtonEvents()
         createLettersGrid()
         createKeyBoardGrid()
+
+        // Sortear a palavra do jogo
+        correctWord = getWordGame()
     }
 
     // Criar a grade com as letras: linhas são as palavras que o usuário vai inserir, colunas são as tentativas usadas para acertar a palavra
@@ -57,25 +63,26 @@ class DailyGame : AppCompatActivity() {
     }
 
     // TODO Criar classe intermediária para adicionar os eventos dos botões para não ficar na classe da activity
-    // TODO IndexOutOfBoundsException: Index 6 out of bounds for length 6
     // Inserir uma letra na grade com os EditText
     private fun insertLetter(letter: String) {
-        val currentRowList = letterGrid.editTextList[letterGrid.currentRow]
-
-        if (letterGrid.selectedColumn < currentRowList.size) {
-            currentRowList[letterGrid.selectedColumn].setText(letter)
-
-            // Restaurar fundo do campo anterior
-            currentRowList[letterGrid.selectedColumn].setBackgroundResource(R.drawable.background_edit_text_letter_grid)
-
-            // Mover para o próximo campo (se houver)
-            if (letterGrid.selectedColumn < currentRowList.size - 1) {
-                letterGrid.selectedColumn++
-            }
-
-            // Destacar o novo campo selecionado
-            currentRowList[letterGrid.selectedColumn].setBackgroundResource(R.drawable.background_edit_text_selected)
+        if (letterGrid.currentRow >= letterGrid.rows) {
+            return
         }
+
+        val currentRowList = letterGrid.editTextList[letterGrid.currentRow]
+        currentRowList[letterGrid.selectedColumn].setText(letter)
+
+        // Restaurar fundo do campo anterior
+        currentRowList[letterGrid.selectedColumn].setBackgroundResource(R.drawable.background_edit_text_letter_grid)
+
+        // Mover para o próximo campo (se houver)
+        if (letterGrid.selectedColumn < currentRowList.size - 1) {
+            letterGrid.selectedColumn++
+        }
+
+        // Destacar o novo campo selecionado
+        currentRowList[letterGrid.selectedColumn].setBackgroundResource(R.drawable.background_edit_text_selected)
+
     }
 
     // Apagar uma letra
@@ -107,20 +114,44 @@ class DailyGame : AppCompatActivity() {
             return
         }
 
+        // Usuário só pode informar palavras que estão no banco de dados local do jogo
+        /*if (!gameController.isWordInLocalDatabase(guess)) {
+            Toast.makeText(this, "Essa palavra não é aceita porque está na nossa lista", Toast.LENGTH_SHORT).show()
+            return
+        }*/
+
         letterGrid.clearSelection()
 
-        val isCorrect = letterGrid.confirmWord(correctWord)
-        keyboardGrid.updateKeyboardColors(guess, correctWord)
+        if (letterGrid.currentRow < 6) {
+            val isCorrect = letterGrid.confirmWord(correctWord)
+            keyboardGrid.updateKeyboardColors(guess, correctWord)
 
-        // Verificar a resposta e bloquear o botão para não permitir enviar mais palavras
-        if (isCorrect) {
-            Toast.makeText(this, "Acertou!", Toast.LENGTH_LONG).show()
-            keyboardGrid.setEnterButtonEnabled(false)
-        } else if (letterGrid.currentRow == 6) {
-            dailyGameBinding.answerTxt.text = "A resposta certa era: $correctWord"
-            keyboardGrid.setEnterButtonEnabled(false)
-            letterGrid.blockRow()
+            // Verificar a resposta e bloquear o botão para não permitir enviar mais palavras
+            if (isCorrect || letterGrid.currentRow >= 6) {
+                Toast.makeText(this, "Acertou!", Toast.LENGTH_LONG).show()
+                keyboardGrid.setEnterButtonEnabled(false)
+                keyboardGrid.disableKeyboard() // TODO corrigir problema visual de ir pra próxima linha depois de ganhar sem bloquear o teclado
+            } else if (letterGrid.currentRow == 6) {
+                dailyGameBinding.answerTxt.text = "A resposta certa era: $correctWord"
+                keyboardGrid.setEnterButtonEnabled(false)
+                keyboardGrid.disableKeyboard() // TODO desbloquear teclado depois de resolver o TODO de cima 
+            }
         }
+    }
+
+    // Escolher e validar a palavra do jogo
+    private fun getWordGame(): String{
+        gameController = GameController(this)
+        val dailyWord = gameController.getRandomWord()
+
+        // Não foi possível escolher uma palavra para o jogo
+        if(!gameController.validateWord(dailyWord)){
+            keyboardGrid.disableKeyboard()
+            Toast.makeText(this, "Erro ao buscar palavra! Não foi possível iniciar o jogo", Toast.LENGTH_LONG).show()
+            return ""
+        }
+
+        return dailyWord
     }
 
     // Configurar todos os eventos de botão

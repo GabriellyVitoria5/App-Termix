@@ -1,16 +1,8 @@
 package com.ifmg.termix.controller
 
 import android.content.Context
-import android.widget.Toast
 import com.ifmg.termix.model.Word
 import com.ifmg.termix.repository.WordRepository
-import java.io.BufferedReader
-import java.io.File
-import java.io.FileReader
-import java.io.IOException
-import java.io.InputStream
-
-
 
 class WordController(var context: Context) {
 
@@ -54,27 +46,7 @@ class WordController(var context: Context) {
         // Atualizar o SharedPreferences para não carregar os dados novamente no banco
         if (isFirstRun) {
             loadWordsFromFile()
-            Toast.makeText(context, "Primeira", Toast.LENGTH_SHORT).show()
             sharedPreferences.edit().putBoolean("firstRun", false).apply()
-        }
-        else{
-            Toast.makeText(context, "Não é primeira", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    // Buscar todas as palavras no banco
-    fun loadWords(): List<Word> {
-        return wordRepository.getAllWords()
-    }
-
-    // Sortear e mostrar uma palavra aramazenada no banco
-    fun showRandomWord() {
-        val word = wordRepository.getRandomWord()
-
-        if (word != null) {
-            Toast.makeText(context, "Palavra sorteada: $word", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(context, "Nenhuma palavra encontrada no banco!", Toast.LENGTH_SHORT).show()
         }
     }
 

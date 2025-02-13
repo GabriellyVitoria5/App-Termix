@@ -46,20 +46,4 @@ class WordRepository(context: Context) {
         return wordsList
     }
 
-    fun getRandomWord(): String? {
-        val db = database.readableDatabase
-        val query = "SELECT ${DatabaseContract.WORD.COLUMN_NAME_WORD} FROM ${DatabaseContract.WORD.TABLE_NAME} ORDER BY RANDOM() LIMIT 1"
-
-        val cursor = db.rawQuery(query, null)
-        var word: String? = null
-
-        if (cursor.moveToFirst()) {
-            word = cursor.getString(0)
-        }
-        cursor.close()
-        db.close()
-
-        return word
-    }
-
 }

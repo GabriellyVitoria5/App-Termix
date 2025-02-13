@@ -1,11 +1,12 @@
 package com.ifmg.termix
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.GridLayoutManager
+import com.ifmg.termix.adapter.CalendarAdapter
 import com.ifmg.termix.databinding.ActivityProfileBinding
+import com.ifmg.termix.utils.CalendarUtils
+import java.util.*
 
 class Profile : AppCompatActivity() {
 
@@ -13,27 +14,33 @@ class Profile : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
 
-        // Inflar os componentes da interface
         profileBinding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(profileBinding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-
         registerButtonEvents()
+        setupCalendar()
     }
 
-    // Configurar todos os eventos de botão
-    private fun registerButtonEvents(){
-
-        // Voltar à tela de minijogos
+    private fun registerButtonEvents() {
         profileBinding.backBtn.setOnClickListener {
             finish()
         }
+    }
+
+    private fun setupCalendar() {
+        // Pega o mês e o ano atual
+        val currentCalendar = Calendar.getInstance()
+        val currentMonth = currentCalendar.get(Calendar.MONTH)
+        val currentYear = currentCalendar.get(Calendar.YEAR)
+
+        // Atualiza o cabeçalho para mostrar o mês e o ano
+        val monthName = currentCalendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())
+        profileBinding.monthTextView.text = "$monthName $currentYear"
+
+        // Passa o mês atual para a função de gerar o calendário
+        val days = CalendarUtils.generateMonthData(currentYear, currentMonth)
+        profileBinding.calendarRecyclerView.layoutManager = GridLayoutManager(this, 7)
+        profileBinding.calendarRecyclerView.adapter = CalendarAdapter(days)
     }
 }

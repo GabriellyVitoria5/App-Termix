@@ -11,4 +11,7 @@
     <string name="time_limit_minigame">Limite de Tempo</string>
     <string name="termix_turbo_minigame">Termix Turbo</string>
     <string name="profile_title">Perfil</string>
+    <string name="historico_de_partidas">Histórico de Partidas</string>
+    <string name="perfil_do_usuario">Perfil do Usuário</string>
+    <string name="month_year">%1$s %2$d</string>
 </resources>

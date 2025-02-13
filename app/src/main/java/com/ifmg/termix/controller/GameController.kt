@@ -1,12 +1,17 @@
 package com.ifmg.termix.controller
 
 import android.content.Context
+import android.widget.Toast
+import com.ifmg.termix.model.PlayerWords
+import com.ifmg.termix.repository.PlayerWordRepository
 import com.ifmg.termix.repository.WordRepository
 import kotlin.random.Random
 
+// Controlar fluxo e ações do jogo principal e dos minigames
 class GameController(var context: Context) {
 
     private val wordRepository = WordRepository(context)
+    private val playerWordRepository = PlayerWordRepository(context)
 
     // Sortear uma palavra aleatória do banco
     fun getRandomWord(): String{
@@ -28,5 +33,18 @@ class GameController(var context: Context) {
         return userWord.uppercase() in words
     }
 
+    // Salvar a palavra digitada pelo usuário no banco
+    fun savePlayerWord(word: String, attempt: Int) {
+        playerWordRepository.insertPlayerWord(PlayerWords(0, word, attempt))
+    }
+
+    // Limpar palavras do usuário ao iniciar um novo jogo
+    fun resetPlayerWords() {
+        playerWordRepository.clearPlayerWords()
+    }
+
+    fun getAllPlayersWord(): List<PlayerWords>{
+        return playerWordRepository.getAllPlayerWords()
+    }
 
 }

@@ -120,6 +120,9 @@ class DailyGame : AppCompatActivity() {
             return
         }*/
 
+        // Salvar a palavra digitada
+        gameController.savePlayerWord(guess, letterGrid.currentRow)
+
         letterGrid.clearSelection()
 
         if (letterGrid.currentRow < 6) {
@@ -134,7 +137,7 @@ class DailyGame : AppCompatActivity() {
             } else if (letterGrid.currentRow == 6) {
                 dailyGameBinding.answerTxt.text = "A resposta certa era: $correctWord"
                 keyboardGrid.setEnterButtonEnabled(false)
-                keyboardGrid.disableKeyboard() // TODO desbloquear teclado depois de resolver o TODO de cima 
+                keyboardGrid.disableKeyboard() // TODO desbloquear teclado depois de resolver o TODO de cima
             }
         }
     }

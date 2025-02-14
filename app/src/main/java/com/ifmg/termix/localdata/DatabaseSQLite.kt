@@ -3,7 +3,6 @@ package com.ifmg.termix.localdata
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
 
 class DatabaseSQLite(context: Context) : SQLiteOpenHelper(
     context,

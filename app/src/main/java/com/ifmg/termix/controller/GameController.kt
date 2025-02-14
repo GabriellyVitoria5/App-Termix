@@ -48,4 +48,11 @@ class GameController(var context: Context) {
         return playerWordRepository.getAllPlayerWords()
     }
 
+    // Resetar para inicar um novo jogo
+    fun resetGame(): String {
+        //resetPlayerWords()
+        return getRandomWord() // Sorteia uma nova palavra
+    }
+
+
 }

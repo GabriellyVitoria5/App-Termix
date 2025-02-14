@@ -151,4 +151,18 @@ class LettersGrid(private val context: Context, private val gridLayout: GridLayo
         }
     }
 
+    // Limpar as cores do teclado para iniciar um novo jogo
+    fun clearLetterGrid() {
+        currentRow = 0
+        selectedColumn = 0
+        for (row in editTextList) {
+            for (editText in row) {
+                editText.text.clear()
+                editText.backgroundTintList = null
+            }
+        }
+        clearSelection() // Garante que a seleção seja redefinida na primeira coluna
+    }
+
+
 }

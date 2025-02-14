@@ -2,6 +2,7 @@ package com.ifmg.termix
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -34,6 +35,8 @@ class DailyGame : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        gameController = GameController(this)
 
         // Registrar eventos
         registerButtonEvents()
@@ -131,20 +134,27 @@ class DailyGame : AppCompatActivity() {
 
             // Verificar a resposta e bloquear o botão para não permitir enviar mais palavras
             if (isCorrect || letterGrid.currentRow >= 6) {
-                Toast.makeText(this, "Acertou!", Toast.LENGTH_LONG).show()
+                dailyGameBinding.answerTxt.text = "Acertou, parabéns!"
                 keyboardGrid.setEnterButtonEnabled(false)
                 keyboardGrid.disableKeyboard() // TODO corrigir problema visual de ir pra próxima linha depois de ganhar sem bloquear o teclado
+                dailyGameBinding.answerTxt.setOnClickListener(View.OnClickListener {
+                    // jogar novamente
+                    resetGameUI()
+                })
             } else if (letterGrid.currentRow == 6) {
                 dailyGameBinding.answerTxt.text = "A resposta certa era: $correctWord"
                 keyboardGrid.setEnterButtonEnabled(false)
                 keyboardGrid.disableKeyboard() // TODO desbloquear teclado depois de resolver o TODO de cima
+                dailyGameBinding.answerTxt.setOnClickListener(View.OnClickListener {
+                    // jogar novamente
+                    resetGameUI()
+                })
             }
         }
     }
 
     // Escolher e validar a palavra do jogo
     private fun getWordGame(): String{
-        gameController = GameController(this)
         val dailyWord = gameController.getRandomWord()
 
         // Não foi possível escolher uma palavra para o jogo
@@ -172,4 +182,23 @@ class DailyGame : AppCompatActivity() {
             startActivity(intent)
         }
     }
+
+    private fun resetGameUI() {
+        // Resetar a palavra correta
+        correctWord = gameController.resetGame()
+
+        // Resetar a grade de letras
+        letterGrid.clearLetterGrid()
+
+        // Resetar o teclado
+        keyboardGrid.clearKeyboardColors()
+
+        // Habilitar os botões novamente
+        keyboardGrid.setEnterButtonEnabled(true)
+        keyboardGrid.enableKeyboard()
+
+        // Atualizar o texto de resposta
+        dailyGameBinding.answerTxt.text = ""
+    }
+
 }

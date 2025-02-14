@@ -35,7 +35,8 @@ class GameController(var context: Context) {
 
     // Salvar a palavra digitada pelo usuário no banco
     fun savePlayerWord(word: String, attempt: Int) {
-        playerWordRepository.insertPlayerWord(PlayerWords(0, word, attempt))
+        val resultado = playerWordRepository.insertPlayerWord(PlayerWords(0, word, attempt))
+        Toast.makeText(context, resultado.toString(), Toast.LENGTH_LONG).show()
     }
 
     // Limpar palavras do usuário ao iniciar um novo jogo

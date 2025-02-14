@@ -3,6 +3,7 @@ package com.ifmg.termix.localdata
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 
 class DatabaseSQLite(context: Context) : SQLiteOpenHelper(
     context,
@@ -14,7 +15,7 @@ class DatabaseSQLite(context: Context) : SQLiteOpenHelper(
         db?.execSQL(DatabaseContract.SQL_CREATE_TABLES)
     }
 
-    override fun onUpgrade(db: SQLiteDatabase?, p1: Int, p2: Int) {
+    override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         db?.execSQL(DatabaseContract.SQL_DROP_TABLES)
         onCreate(db)
     }

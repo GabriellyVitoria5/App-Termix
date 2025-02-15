@@ -11,7 +11,10 @@ class DatabaseSQLite(context: Context) : SQLiteOpenHelper(
 ) {
 
     override fun onCreate(db: SQLiteDatabase?) {
-        db?.execSQL(DatabaseContract.SQL_CREATE_TABLES)
+        db?.execSQL(DatabaseContract.WORD.SQL_CREATE)
+        db?.execSQL(DatabaseContract.PLAYER_WORDS.SQL_CREATE)
+        db?.execSQL(DatabaseContract.PROFILE.SQL_CREATE)
+        db?.execSQL(DatabaseContract.CALENDAR.SQL_CREATE)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {

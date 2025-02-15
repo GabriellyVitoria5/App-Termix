@@ -7,7 +7,7 @@ class DatabaseContract {
         const val DATABASE_NAME: String = "termix.db"
         const val DATABASE_VERSION: Int = 1
 
-        const val SQL_CREATE_TABLES = "${WORD.SQL_CREATE} ${PLAYER_WORDS.SQL_CREATE} ${PROFILE.SQL_CREATE} ${CALENDAR.SQL_CREATE}"
+        const val SQL_CREATE_TABLES = "${WORD.SQL_CREATE}, ${PLAYER_WORDS.SQL_CREATE}, ${PROFILE.SQL_CREATE}, ${CALENDAR.SQL_CREATE}"
         const val SQL_DROP_TABLES = "${WORD.SQL_DROP} ${PLAYER_WORDS.SQL_DROP} ${PROFILE.SQL_DROP} ${CALENDAR.SQL_DROP}"
     }
 
@@ -70,7 +70,6 @@ class DatabaseContract {
         const val COLUMN_NAME_ID = "id"
         const val COLUMN_NAME_DATE = "date"
         const val COLUMN_NAME_GAME_STATUS = "game_status"
-        const val COLUMN_NAME_PROFILE_ID = "profile_id" // FK referenciando a tabela de perfil
 
         const val SQL_CREATE = "CREATE TABLE IF NOT EXISTS $TABLE_NAME (" +
                 "$COLUMN_NAME_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +

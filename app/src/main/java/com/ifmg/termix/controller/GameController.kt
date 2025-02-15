@@ -36,7 +36,7 @@ class GameController(var context: Context) {
     // Salvar a palavra digitada pelo usuário no banco
     fun savePlayerWord(word: String, attempt: Int) {
         val resultado = playerWordRepository.insertPlayerWord(PlayerWords(0, word, attempt))
-        Toast.makeText(context, resultado.toString(), Toast.LENGTH_LONG).show()
+        Toast.makeText(context, resultado.toString(), Toast.LENGTH_SHORT).show()
     }
 
     // Limpar palavras do usuário ao iniciar um novo jogo
@@ -50,7 +50,7 @@ class GameController(var context: Context) {
 
     // Resetar para inicar um novo jogo
     fun resetGame(): String {
-        //resetPlayerWords()
+        resetPlayerWords()
         return getRandomWord() // Sorteia uma nova palavra
     }
 

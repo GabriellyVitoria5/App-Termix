@@ -63,6 +63,11 @@ class InfiniteMinigame : AppCompatActivity() {
             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             dialog.show()
 
+            // Fechar o pop up pode ser fechado ao clicar nele
+            alertCustomdialog.setOnClickListener {
+                dialog.dismiss()
+            }
+
         }
 
     }

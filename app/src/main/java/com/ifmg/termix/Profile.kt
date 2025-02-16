@@ -1,11 +1,12 @@
 package com.ifmg.termix
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.GridLayoutManager
+import com.ifmg.termix.adapter.CalendarAdapter
 import com.ifmg.termix.databinding.ActivityProfileBinding
+import com.ifmg.termix.utils.CalendarUtils
+import java.util.*
 
 class Profile : AppCompatActivity() {
 
@@ -13,27 +14,47 @@ class Profile : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
 
-        // Inflar os componentes da interface
         profileBinding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(profileBinding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-
         registerButtonEvents()
+        setupCalendar()
+        setupStats()
     }
 
-    // Configurar todos os eventos de botão
-    private fun registerButtonEvents(){
-
-        // Voltar à tela de minijogos
+    private fun registerButtonEvents() {
         profileBinding.backBtn.setOnClickListener {
             finish()
         }
+    }
+
+    private fun setupCalendar() {
+        val currentCalendar = Calendar.getInstance()
+        val currentMonth = currentCalendar.get(Calendar.MONTH)
+        val currentYear = currentCalendar.get(Calendar.YEAR)
+
+        // Atualiza o cabeçalho do calendário
+        val monthName = currentCalendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())
+        profileBinding.monthTextView.text = "$monthName $currentYear"
+
+        // TODO: Buscar dados do banco sobre partidas jogadas e vitórias
+        val days = CalendarUtils.generateMonthData(currentYear, currentMonth)
+
+        profileBinding.calendarRecyclerView.layoutManager = GridLayoutManager(this, 7)
+        profileBinding.calendarRecyclerView.adapter = CalendarAdapter(days)
+    }
+
+    private fun setupStats() {
+        // TODO: Substituir por valores reais do banco de dados
+        val fakeGamesPerMode = 15
+        val fakeWinStreak = 5
+        val fakeTotalVictories = 42
+        val fakeTotalLosses = 12
+
+        profileBinding.gamesPerMode.text = "$fakeGamesPerMode"
+        profileBinding.winStreak.text = "$fakeWinStreak"
+        profileBinding.victories.text = "$fakeTotalVictories"
+        profileBinding.losses.text = "$fakeTotalLosses"
     }
 }

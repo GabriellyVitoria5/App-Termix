@@ -1,7 +1,12 @@
 package com.ifmg.termix.controller
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.view.LayoutInflater
+import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.ifmg.termix.model.PlayerWords
 import com.ifmg.termix.repository.PlayerWordRepository
 import com.ifmg.termix.repository.WordRepository
@@ -52,6 +57,21 @@ class GameController(var context: Context) {
     fun resetGame(): String {
         resetPlayerWords()
         return getRandomWord() // Sorteia uma nova palavra
+    }
+
+    // Exibir um pop up com as regras do modo de jogo ao clicar no botão '?'
+    fun showPopup(layoutId: Int) {
+        val alertCustomdialog: View = LayoutInflater.from(context).inflate(layoutId, null)
+        val alert: AlertDialog.Builder = AlertDialog.Builder(context)
+        alert.setView(alertCustomdialog)
+
+        val dialog: AlertDialog = alert.create()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT)) // Remover a borda
+        dialog.show()
+
+        alertCustomdialog.setOnClickListener {
+            dialog.dismiss()
+        }
     }
 
 

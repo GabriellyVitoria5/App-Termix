@@ -6,11 +6,14 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.ifmg.termix.controller.GameController
 import com.ifmg.termix.databinding.ActivityTimeLimitMinigameBinding
 
 class TimeLimitMinigame : AppCompatActivity() {
 
     private lateinit var tileLimiteMinigameBinding: ActivityTimeLimitMinigameBinding
+
+    private lateinit var gameController: GameController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,11 +29,14 @@ class TimeLimitMinigame : AppCompatActivity() {
             insets
         }
 
-        registerButtonEvents()
+        // Criar instância do controller
+        gameController = GameController(this)
+
+        registerButtonEvents(gameController)
     }
 
     // Configurar todos os eventos de botão
-    private fun registerButtonEvents(){
+    private fun registerButtonEvents(gameController: GameController){
 
         // Voltar à tela de minijogos
         tileLimiteMinigameBinding.backToHomeTimeLimitBtn.setOnClickListener {
@@ -42,6 +48,11 @@ class TimeLimitMinigame : AppCompatActivity() {
         tileLimiteMinigameBinding.profileTimeLimiteBtn.setOnClickListener {
             val intent = Intent(this, Profile::class.java)
             startActivity(intent)
+        }
+
+        // Mostrar regras do jogo em um pop up customizado
+        tileLimiteMinigameBinding.ruleTimeLimiteBtn.setOnClickListener {
+            gameController.showPopup(R.layout.time_rules)
         }
     }
 }

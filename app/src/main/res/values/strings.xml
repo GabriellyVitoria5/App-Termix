@@ -11,6 +11,14 @@
     <string name="time_limit_minigame">Limite de Tempo</string>
     <string name="termix_turbo_minigame">Termix Turbo</string>
     <string name="profile_title">Perfil</string>
+    <string name="historico_de_partidas">Histórico de Partidas</string>
+    <string name="perfil_do_usuario">Perfil do Usuário</string>
+    <string name="month_year">%1$s %2$d</string>
+    <string name="sequencia_de_vitorias">Sequência de vitórias:</string>
+    <string name="_0">0</string>
+    <string name="total_vitorias">Total de vitórias:</string>
+    <string name="total_partidas">Total de partidas jogadas:</string>
+    <string name="total_derrotas">Total de derrotas:</string>
     <string name="daily_rules_title">Modo de jogo diário</string>
     <string name="infinite_rules_title">Minigame infinito</string>
     <string name="time_rules_title">Minigame com limite de tempo</string>

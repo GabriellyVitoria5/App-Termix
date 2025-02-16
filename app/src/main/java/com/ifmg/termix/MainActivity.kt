@@ -6,6 +6,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.ifmg.termix.controller.WordController
 import com.ifmg.termix.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -26,58 +27,8 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        loadWordsToDatabase()
         registerButtonEvents()
-
-        /*val keyboardLayout = findViewById<GridLayout>(R.id.keyboard)
-        val letters = "QWERTYUIOPASDFGHJKLZXCVBNM".toCharArray()
-
-        for (letter in letters) {
-            val button = Button(this).apply {
-                text = letter.toString()
-                textSize = 16f
-                layoutParams = GridLayout.LayoutParams().apply {
-                    width = 0
-                    height = ViewGroup.LayoutParams.WRAP_CONTENT
-                    columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
-                    rowSpec = GridLayout.spec(GridLayout.UNDEFINED)
-                    setMargins(8, 8, 8, 8)
-                }
-            }
-
-            button.setOnClickListener {
-                // Aqui você pode tratar os cliques no botão
-                Toast.makeText(this, "Letra clicada: $letter", Toast.LENGTH_SHORT).show()
-            }
-
-            keyboardLayout.addView(button)
-
-            button.background = ContextCompat.getDrawable(this, R.drawable.background_button_keyboard)
-        }
-
-
-
-        val enterButton = Button(this).apply {
-            text = "ENTER"
-            layoutParams = GridLayout.LayoutParams().apply {
-                width = 0
-                height = ViewGroup.LayoutParams.WRAP_CONTENT
-                columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 2f)
-                setMargins(8, 8, 8, 8)
-            }
-        }
-
-        val backspaceButton = Button(this).apply {
-            text = "←"
-            layoutParams = GridLayout.LayoutParams().apply {
-                width = 0
-                height = ViewGroup.LayoutParams.WRAP_CONTENT
-                columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 2f)
-                setMargins(8, 8, 8, 8)
-            }
-        }
-        keyboardLayout.addView(enterButton)
-        keyboardLayout.addView(backspaceButton)*/
-
     }
 
     // Configurar todos os eventos de botão
@@ -100,5 +51,11 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, Profile::class.java)
             startActivity(intent)
         }
+    }
+
+    // Carregar as palavras do jogo no banco ao baixar o aplicativo, nas próximas vezes que ele for aberto, os dados não serão carregados
+    private fun loadWordsToDatabase(){
+        val gameController = WordController(this)
+        gameController.loadWordsIfFirstRun()
     }
 }

@@ -24,8 +24,8 @@
     <string name="time_rules_title">Minigame com limite de tempo</string>
     <string name="turbo_rules_title">Minigame Termix Turbo</string>
     <string name="general_rules_1">O objetivo do jogo é acertar a palavra secreta certa em 6 tentativas. Após cada tentativa, o jogo irá indicar o quão perto você está de descobrir a palavra por meio das cores das letras. </string>
-    <string name="general_rules_2">No exemplo acima, TERRA não é a palavra secreta, mas as letras R está na posição correta. Já a letra A faz parte da palavra secreta, mas fica em outra posição. Letras com o fundo cinza não fazem parte da palavra secreta. </string>
-    <string name="general_rules_3">A palavra secreta pode ter letras repetidas. Note que no exemplo, a palavra secreta não tem outra letra R, mas pode ser que a letra A seja repetida</string>
+    <string name="general_rules_2">No exemplo acima, <b>TERRA</b> não é a palavra secreta, mas a letra <b>R</b> está na posição correta. A letra <b>A</b> faz parte da palavra secreta, mas fica em outra posição. Letras com o fundo cinza não fazem parte da palavra secreta. </string>
+    <string name="general_rules_3">A palavra secreta pode ter letras repetidas. Note que no exemplo, a palavra secreta não tem outra letra <b>R</b>, mas pode ser que a letra <b>A</b> seja repetida.</string>
     <string name="general_rules_4">Não se preocupe com acentos! Eles serão preenchidos automaticamente após inserir uma palalavra.</string>
     <string name="daily_rules">No modo de jogo de jogo diário, uma palavra nova é sorteada a cada dia. Por isso, não se esqueça de jogar todo dia e ver o seu progresso no perfil!</string>
     <string name="infinite_rules">No modo de jogo infinito, você pode tentar acertar a palavra secreta quantas vezes quiser sem limite diário do jogo padrão! Jogue quantas vezes quiser, treina para acertar a palavra diária ou se divirta no tempo livre.</string>

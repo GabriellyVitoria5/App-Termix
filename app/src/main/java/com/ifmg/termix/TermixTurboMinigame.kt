@@ -3,6 +3,7 @@ package com.ifmg.termix
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -15,8 +16,10 @@ class TermixTurboMinigame : AppCompatActivity() {
 
     private lateinit var termixTurboMinigameBinding: ActivityTermixTurboMinigameBinding
     private lateinit var timerText: TextView
+    private lateinit var increaseTimeBtn: ImageButton
+    private lateinit var decreaseTimeBtn: ImageButton
     private var countDownTimer: CountDownTimer? = null
-    private val totalTimeInMillis: Long = 60000 // 1 minuto = 60000 milissegundos
+    private var timeLeftInMillis: Long = 60000 // Inicia com 1 minuto = 60000 milissegundos
     private var wordsGuessedCorrectly = 0 // Variável para contar as palavras corretas
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,8 +30,10 @@ class TermixTurboMinigame : AppCompatActivity() {
         termixTurboMinigameBinding = ActivityTermixTurboMinigameBinding.inflate(layoutInflater)
         setContentView(termixTurboMinigameBinding.root)
 
-        // Referencia o TextView para o timer
-        timerText = findViewById(R.id.timer_text)
+        // Referencia os componentes
+        timerText = findViewById(R.id.time_display)
+        increaseTimeBtn = findViewById(R.id.increase_time_btn)
+        decreaseTimeBtn = findViewById(R.id.decrease_time_btn)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -41,10 +46,22 @@ class TermixTurboMinigame : AppCompatActivity() {
 
         // Inicia o timer
         startTimer()
+
+        // Configura botões de aumentar e diminuir tempo
+        increaseTimeBtn.setOnClickListener {
+            changeTime(0.5) // Aumenta 30 segundos
+        }
+
+        decreaseTimeBtn.setOnClickListener {
+            changeTime(-0.5) // Diminui 30 segundos
+        }
     }
 
     private fun startTimer() {
-        countDownTimer = object : CountDownTimer(totalTimeInMillis, 1000) {
+        // Cancela o timer atual se já existir antes de criar um novo
+        countDownTimer?.cancel()
+
+        countDownTimer = object : CountDownTimer(timeLeftInMillis, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val secondsRemaining = millisUntilFinished / 1000
                 val minutes = secondsRemaining / 60
@@ -58,6 +75,15 @@ class TermixTurboMinigame : AppCompatActivity() {
                 endGame()
             }
         }.start()
+    }
+
+    // Aumenta ou diminui o tempo
+    private fun changeTime(minutesToAdd: Double) {
+        timeLeftInMillis += (minutesToAdd * 60000).toLong() // Cada minuto é 60000 milissegundos
+        if (timeLeftInMillis < 0) {
+            timeLeftInMillis = 0 // Não permite valores negativos
+        }
+        startTimer() // Reinicia o timer com o novo tempo
     }
 
     // TODO: adicionar a lógica para verificar se a palavra foi adivinhada corretamente

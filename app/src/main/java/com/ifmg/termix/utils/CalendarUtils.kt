@@ -1,35 +1,22 @@
 package com.ifmg.termix.utils
 
-import com.ifmg.termix.adapter.DayStatus
+import com.ifmg.termix.model.CalendarDay
 import java.util.*
 
 object CalendarUtils {
-    fun generateMonthData(year: Int, month: Int): List<DayStatus?> {
+    fun generateMonthData(year: Int, month: Int): List<CalendarDay> {
         val calendar = Calendar.getInstance()
-        calendar.set(Calendar.YEAR, year)
-        calendar.set(Calendar.MONTH, month)
-        calendar.set(Calendar.DAY_OF_MONTH, 1)
+        calendar.set(year, month, 1)
 
         val daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
-        val firstDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1 // Ajuste para alinhar corretamente
+        val monthData = mutableListOf<CalendarDay>()
 
-        val days = mutableListOf<DayStatus?>()
-
-        // Adiciona os cabeçalhos dos dias da semana (DOM, SEG, TER...)
-        for (i in 0..6) {
-            days.add(DayStatus(-1, false)) // Código especial para cabeçalho
-        }
-
-        // Adiciona espaços vazios no início para alinhar o primeiro dia
-        for (i in 0 until firstDayOfWeek) {
-            days.add(null)
-        }
-
-        // Adiciona os dias reais do mês
         for (day in 1..daysInMonth) {
-            days.add(DayStatus(day, Random().nextBoolean()))
-        }
+            val played = (0..1).random() == 1 // TODO: Substituir por dados do banco
+            val won = if (played) (0..1).random() == 1 else null
 
-        return days
+            monthData.add(CalendarDay(day, played, won))
+        }
+        return monthData
     }
 }

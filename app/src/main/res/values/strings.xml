@@ -14,4 +14,9 @@
     <string name="historico_de_partidas">Histórico de Partidas</string>
     <string name="perfil_do_usuario">Perfil do Usuário</string>
     <string name="month_year">%1$s %2$d</string>
+    <string name="sequencia_de_vitorias">Sequência de vitórias:</string>
+    <string name="_0">0</string>
+    <string name="tempo_recorde">Tempo recorde:</string>
+    <string name="_00_00">00:00</string>
+    <string name="jogos_por_modo">Jogos por modo:</string>
 </resources>

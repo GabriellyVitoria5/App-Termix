@@ -20,6 +20,7 @@ class Profile : AppCompatActivity() {
 
         registerButtonEvents()
         setupCalendar()
+        setupStats()
     }
 
     private fun registerButtonEvents() {
@@ -29,18 +30,29 @@ class Profile : AppCompatActivity() {
     }
 
     private fun setupCalendar() {
-        // Pega o mês e o ano atual
         val currentCalendar = Calendar.getInstance()
         val currentMonth = currentCalendar.get(Calendar.MONTH)
         val currentYear = currentCalendar.get(Calendar.YEAR)
 
-        // Atualiza o cabeçalho para mostrar o mês e o ano
+        // Atualiza o cabeçalho do calendário
         val monthName = currentCalendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())
         profileBinding.monthTextView.text = "$monthName $currentYear"
 
-        // Passa o mês atual para a função de gerar o calendário
+        // TODO: Buscar dados do banco sobre partidas jogadas e vitórias
         val days = CalendarUtils.generateMonthData(currentYear, currentMonth)
+
         profileBinding.calendarRecyclerView.layoutManager = GridLayoutManager(this, 7)
         profileBinding.calendarRecyclerView.adapter = CalendarAdapter(days)
+    }
+
+    private fun setupStats() {
+        // TODO: Substituir por valores reais do banco de dados
+        val fakeGamesPerMode = 15
+        val fakeWinStreak = 5
+        val fakeRecordTimeSeconds = 42
+
+        profileBinding.gamesPerMode.text = "$fakeGamesPerMode"
+        profileBinding.winStreak.text = "$fakeWinStreak"
+        profileBinding.recordTime.text = String.format(Locale.getDefault(), "%02d:%02d", fakeRecordTimeSeconds / 60, fakeRecordTimeSeconds % 60)
     }
 }

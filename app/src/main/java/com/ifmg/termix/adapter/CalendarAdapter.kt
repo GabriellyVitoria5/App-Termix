@@ -5,33 +5,48 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.ifmg.termix.R
-import com.ifmg.termix.model.CalendarDay
+import java.util.Locale
 
-class CalendarAdapter(private val days: List<CalendarDay>) :
-    RecyclerView.Adapter<CalendarAdapter.DayViewHolder>() {
+class CalendarAdapter(private val days: List<DayStatus?>) : RecyclerView.Adapter<CalendarAdapter.DayViewHolder>() {
 
-    class DayViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val dayText: TextView = view.findViewById(R.id.dayText)
-    }
+    private val weekDays = listOf("S", "T", "Q", "Q", "S", "S", "D") // Sequência correta
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DayViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_calendar_day, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_calendar_day, parent, false)
         return DayViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: DayViewHolder, position: Int) {
-        val day = days[position]
+        val dayStatus = days[position]
 
-        holder.dayText.text = day.day.toString()
-        when {
-            day.won == true -> holder.dayText.setBackgroundColor(Color.GREEN) // Vitória
-            day.won == false -> holder.dayText.setBackgroundColor(Color.RED) // Derrota
-            else -> holder.dayText.setBackgroundColor(Color.TRANSPARENT) // Não jogado
+        if (position < 7) { // Cabeçalhos dos dias da semana
+            holder.dayTextView.text = weekDays[position]
+            holder.dayContainer.setCardBackgroundColor(Color.WHITE) // Fundo branco
+            holder.dayTextView.setTextColor(Color.BLACK) // Texto preto
+            holder.dayContainer.visibility = View.VISIBLE
+        } else if (dayStatus == null) {
+            holder.dayContainer.visibility = View.INVISIBLE
+        } else {
+            holder.dayTextView.text = String.format(Locale.getDefault(), "%d", dayStatus.day)
+            holder.dayContainer.visibility = View.VISIBLE
+
+            if (dayStatus.acertou) {
+                holder.dayContainer.setCardBackgroundColor(Color.parseColor("#A8D5BA")) // Verde pastel
+            } else {
+                holder.dayContainer.setCardBackgroundColor(Color.parseColor("#F8B8B8")) // Vermelho pastel
+            }
         }
     }
 
-    override fun getItemCount() = days.size
+    override fun getItemCount(): Int = days.size
+
+    class DayViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val dayTextView: TextView = view.findViewById(R.id.dayText)
+        val dayContainer: CardView = view.findViewById(R.id.dayContainer)
+    }
 }
+
+data class DayStatus(val day: Int, val acertou: Boolean)

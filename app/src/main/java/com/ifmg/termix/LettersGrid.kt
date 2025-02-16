@@ -10,7 +10,7 @@ import androidx.core.content.ContextCompat
 
 class LettersGrid(private val context: Context, private val gridLayout: GridLayout) {
 
-    private val rows = 6
+    val rows = 6
     private val cols = 5
     val editTextList = mutableListOf<MutableList<EditText>>()
     var currentRow = 0
@@ -72,7 +72,9 @@ class LettersGrid(private val context: Context, private val gridLayout: GridLayo
 
         // Usuário acertou a palavra
         if (userWord == correctWord) {
-            currentRow++
+            if (currentRow < rows - 1) { // Corrigir problema: jogo estava indo para a próxima e ultrapassava a quantidade de tentativas
+                currentRow++
+            }
             return true
         }
 
@@ -148,5 +150,19 @@ class LettersGrid(private val context: Context, private val gridLayout: GridLayo
             }
         }
     }
+
+    // Limpar as cores do teclado para iniciar um novo jogo
+    fun clearLetterGrid() {
+        currentRow = 0
+        selectedColumn = 0
+        for (row in editTextList) {
+            for (editText in row) {
+                editText.text.clear()
+                editText.backgroundTintList = null
+            }
+        }
+        clearSelection() // Garante que a seleção seja redefinida na primeira coluna
+    }
+
 
 }

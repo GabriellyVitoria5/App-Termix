@@ -114,9 +114,25 @@ class KeyboardGrid(
         }
     }
 
+    // Desloquear todas as telcas do teclado criado
+    fun enableKeyboard() {
+        for (button in buttonsMap.values) {
+            button.isEnabled = true
+        }
+    }
+
     // Bloquear e habilitar botão de enviar do teclado criado
     fun setEnterButtonEnabled(enabled: Boolean) {
         enterButton?.isEnabled = enabled
         enterButton?.alpha = if (enabled) 1.0f else 0.5f
     }
+
+    // Limpar as informações da grade de letras, limpando as tentativas e cores iniciar um novo jogo
+    fun clearKeyboardColors() {
+        correctLetters.clear()
+        for (button in buttonsMap.values) {
+            button.backgroundTintList = null
+        }
+    }
+
 }

@@ -47,7 +47,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp">
 
-        <!-- Linha 1 - Jogos por Modo -->
+        <!-- Linha 1 - Total de partidas jogadas -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/jogos_por_modo"
+                android:text="@string/total_partidas"
                 android:textSize="18sp"
                 android:textStyle="bold"/>
 
@@ -105,7 +105,7 @@
             android:layout_height="1dp"
             android:background="#CCCCCC"/>
 
-        <!-- Linha 3 - Tempo Recorde -->
+        <!-- Linha 3 - Total de vitórias -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -117,15 +117,39 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/tempo_recorde"
+                android:text="@string/total_vitorias"
                 android:textSize="18sp"
                 android:textStyle="bold"/>
 
             <TextView
-                android:id="@+id/recordTime"
+                android:id="@+id/victories"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/_00_00"
+                android:text="@string/_0"
+                android:textSize="18sp"/>
+        </LinearLayout>
+
+        <!-- Linha 4 - Total de derrotas -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="8dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/total_derrotas"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/losses"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/_0"
                 android:textSize="18sp"/>
         </LinearLayout>
     </LinearLayout>

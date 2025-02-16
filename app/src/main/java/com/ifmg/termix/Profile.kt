@@ -49,10 +49,12 @@ class Profile : AppCompatActivity() {
         // TODO: Substituir por valores reais do banco de dados
         val fakeGamesPerMode = 15
         val fakeWinStreak = 5
-        val fakeRecordTimeSeconds = 42
+        val fakeTotalVictories = 42
+        val fakeTotalLosses = 12
 
         profileBinding.gamesPerMode.text = "$fakeGamesPerMode"
         profileBinding.winStreak.text = "$fakeWinStreak"
-        profileBinding.recordTime.text = String.format(Locale.getDefault(), "%02d:%02d", fakeRecordTimeSeconds / 60, fakeRecordTimeSeconds % 60)
+        profileBinding.victories.text = "$fakeTotalVictories"
+        profileBinding.losses.text = "$fakeTotalLosses"
     }
 }

@@ -9,7 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.ifmg.termix.controller.GameController
+import com.ifmg.termix.controller.KeyboardGridController
 import com.ifmg.termix.databinding.ActivityDailyGameBinding
+import com.ifmg.termix.model.LettersGrid
 
 class DailyGame : AppCompatActivity() {
 
@@ -18,7 +20,7 @@ class DailyGame : AppCompatActivity() {
     private lateinit var gameController: GameController
 
     private lateinit var letterGrid: LettersGrid
-    private lateinit var keyboardGrid: KeyboardGrid
+    private lateinit var keyboardGridController: KeyboardGridController
 
     private lateinit var correctWord: String
 
@@ -55,14 +57,14 @@ class DailyGame : AppCompatActivity() {
 
     // Criar a grade com o teclado: cada letra do alfabeto é um botão, mais os botões de enviar e apagar. Os botões já recebem ações que devem ser feitas ao serem clicados
     private fun createKeyBoardGrid() {
-        keyboardGrid = KeyboardGrid(
+        keyboardGridController = KeyboardGridController(
             context = this,
             gridLayout = dailyGameBinding.keyboardGridDaily,
             onLetterPressed = { letter -> insertLetter(letter) },
             onDeletePressed = { deleteLetter() },
             onEnterPressed = { submitWord() }
         )
-        keyboardGrid.createKeyboard()
+        keyboardGridController.createKeyboard()
     }
 
     // TODO Criar classe intermediária para adicionar os eventos dos botões para não ficar na classe da activity
@@ -130,22 +132,22 @@ class DailyGame : AppCompatActivity() {
 
         if (letterGrid.currentRow < 6) {
             val isCorrect = letterGrid.confirmWord(correctWord)
-            keyboardGrid.updateKeyboardColors(guess, correctWord)
+            keyboardGridController.updateKeyboardColors(guess, correctWord)
 
             // Verificar a resposta e bloquear o botão para não permitir enviar mais palavras
-            if (isCorrect || letterGrid.currentRow >= 6) {
+            if (isCorrect || letterGrid.currentRow > 6) { // TODO quando acerta na última ainda dá pra selecionar o campo
                 dailyGameBinding.answerTxt.text = "Acertou, parabéns!"
-                keyboardGrid.setEnterButtonEnabled(false)
-                keyboardGrid.disableKeyboard() // TODO corrigir problema visual de ir pra próxima linha depois de ganhar sem bloquear o teclado
-                dailyGameBinding.answerTxt.setOnClickListener(View.OnClickListener {
+                keyboardGridController.setEnterButtonEnabled(false)
+                keyboardGridController.disableKeyboard() // TODO corrigir problema visual de ir pra próxima linha depois de ganhar sem bloquear o teclado
+                dailyGameBinding.answerTxt.setOnClickListener( {
                     // jogar novamente
                     resetGameUI()
                 })
             } else if (letterGrid.currentRow == 6) {
                 dailyGameBinding.answerTxt.text = "A resposta certa era: $correctWord"
-                keyboardGrid.setEnterButtonEnabled(false)
-                keyboardGrid.disableKeyboard() // TODO desbloquear teclado depois de resolver o TODO de cima
-                dailyGameBinding.answerTxt.setOnClickListener(View.OnClickListener {
+                keyboardGridController.setEnterButtonEnabled(false)
+                keyboardGridController.disableKeyboard() // TODO desbloquear teclado depois de resolver o TODO de cima
+                dailyGameBinding.answerTxt.setOnClickListener( {
                     // jogar novamente
                     resetGameUI()
                 })
@@ -159,7 +161,7 @@ class DailyGame : AppCompatActivity() {
 
         // Não foi possível escolher uma palavra para o jogo
         if(!gameController.validateWord(dailyWord)){
-            keyboardGrid.disableKeyboard()
+            keyboardGridController.disableKeyboard()
             Toast.makeText(this, "Erro ao buscar palavra! Não foi possível iniciar o jogo", Toast.LENGTH_LONG).show()
             return ""
         }
@@ -191,11 +193,11 @@ class DailyGame : AppCompatActivity() {
         letterGrid.clearLetterGrid()
 
         // Resetar o teclado
-        keyboardGrid.clearKeyboardColors()
+        keyboardGridController.clearKeyboardColors()
 
         // Habilitar os botões novamente
-        keyboardGrid.setEnterButtonEnabled(true)
-        keyboardGrid.enableKeyboard()
+        keyboardGridController.setEnterButtonEnabled(true)
+        keyboardGridController.enableKeyboard()
 
         // Atualizar o texto de resposta
         dailyGameBinding.answerTxt.text = ""

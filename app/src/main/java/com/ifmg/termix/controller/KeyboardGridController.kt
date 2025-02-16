@@ -1,29 +1,21 @@
-package com.ifmg.termix
+package com.ifmg.termix.controller
 
 import android.content.Context
 import android.view.Gravity
 import android.widget.Button
 import android.widget.GridLayout
 import androidx.core.content.ContextCompat
+import com.ifmg.termix.R
+import com.ifmg.termix.model.KeyboardGrid
 
-class KeyboardGrid(
+class KeyboardGridController(
     private val context: Context,
     private val gridLayout: GridLayout,
     private val onLetterPressed: (String) -> Unit,
     private val onDeletePressed: () -> Unit,
     private val onEnterPressed: () -> Unit
 ) {
-
-    // Letras do teclado
-    private val letters = listOf(
-        "QWERTYUIOP",
-        "ASDFGHJKLÇ",
-        "ZXCVBNM"
-    )
-
-    private val buttonsMap = mutableMapOf<String, Button>() // Mapeia as letras aos botões
-    private val correctLetters = mutableSetOf<String>() // Letras que já foram confirmadas como verdes
-    private var enterButton: Button? = null // Botão enviar a resposta
+    private val keyboardGridModel = KeyboardGrid()
 
     // Criar o layout da grade do teclado na activity, cada letra será um botão do teclado
     fun createKeyboard() {
@@ -31,7 +23,7 @@ class KeyboardGrid(
         gridLayout.columnCount = 10
 
         // Adiciona as letras
-        for ((rowIndex, row) in letters.withIndex()) {
+        for ((rowIndex, row) in keyboardGridModel.letters.withIndex()) {
             for ((colIndex, letter) in row.withIndex()) {
                 addButton(letter.toString(), rowIndex, colIndex)
             }
@@ -39,7 +31,7 @@ class KeyboardGrid(
 
         // Botões especiais de apagar e enviar a palavra informada
         addButton("⌫", 2, 8, 2)
-        enterButton = addButton("ENVIAR", 3, 0, 10)
+        keyboardGridModel.enterButton = addButton("ENVIAR", 3, 0, 10)
     }
 
     // Adicionar os botões no teclado
@@ -66,7 +58,7 @@ class KeyboardGrid(
         button.layoutParams = params
         gridLayout.addView(button)
 
-        buttonsMap[text] = button
+        keyboardGridModel.letterButtonsMap[text] = button
 
         return button
     }
@@ -87,20 +79,26 @@ class KeyboardGrid(
 
         for (i in guessedChars.indices) {
             val letter = guessedChars[i].toString()
-            val button = buttonsMap[letter]
+            val button = keyboardGridModel.letterButtonsMap[letter]
 
             // Só altera a cor se o botão não for de uma letra correta, ação necessária para não alterar a cor do botão no teclado de uma letra já encontrada na posição certa em tentativas anteriores
-            if (button != null && !correctLetters.contains(letter)) {
+            if (button != null && !keyboardGridModel.correctLetters.contains(letter)) {
                 when {
                     guessedChars[i] == correctChars[i] -> { // Letra está na palavra e na posição certa
-                        button.backgroundTintList = ContextCompat.getColorStateList(context, R.color.green)
-                        correctLetters.add(letter) // Trava essa letra para não mudar a cor e o usuário saber que encontrou a posição dela
+                        button.backgroundTintList = ContextCompat.getColorStateList(context,
+                            R.color.green
+                        )
+                        keyboardGridModel.correctLetters.add(letter) // Trava essa letra para não mudar a cor e o usuário saber que encontrou a posição dela
                     }
                     correctWord.contains(letter) -> { // Letra está na palavra, mas em outra posição
-                        button.backgroundTintList = ContextCompat.getColorStateList(context, R.color.yellow)
+                        button.backgroundTintList = ContextCompat.getColorStateList(context,
+                            R.color.yellow
+                        )
                     }
-                    else -> { // Letra não está na palavra errada
-                        button.backgroundTintList = ContextCompat.getColorStateList(context, R.color.gray)
+                    else -> { // Letra não está na palavra
+                        button.backgroundTintList = ContextCompat.getColorStateList(context,
+                            R.color.gray
+                        )
                     }
                 }
             }
@@ -109,30 +107,29 @@ class KeyboardGrid(
 
     // Bloquear todas as telcas do teclado criado
     fun disableKeyboard() {
-        for (button in buttonsMap.values) {
+        for (button in keyboardGridModel.letterButtonsMap.values) {
             button.isEnabled = false
         }
     }
 
     // Desloquear todas as telcas do teclado criado
     fun enableKeyboard() {
-        for (button in buttonsMap.values) {
+        for (button in keyboardGridModel.letterButtonsMap.values) {
             button.isEnabled = true
         }
     }
 
     // Bloquear e habilitar botão de enviar do teclado criado
     fun setEnterButtonEnabled(enabled: Boolean) {
-        enterButton?.isEnabled = enabled
-        enterButton?.alpha = if (enabled) 1.0f else 0.5f
+        keyboardGridModel.enterButton?.isEnabled = enabled
+        keyboardGridModel.enterButton?.alpha = if (enabled) 1.0f else 0.5f
     }
 
     // Limpar as informações da grade de letras, limpando as tentativas e cores iniciar um novo jogo
     fun clearKeyboardColors() {
-        correctLetters.clear()
-        for (button in buttonsMap.values) {
+        keyboardGridModel.correctLetters.clear()
+        for (button in keyboardGridModel.letterButtonsMap.values) {
             button.backgroundTintList = null
         }
     }
-
 }

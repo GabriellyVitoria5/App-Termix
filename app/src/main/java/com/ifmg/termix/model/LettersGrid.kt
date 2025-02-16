@@ -1,4 +1,4 @@
-package com.ifmg.termix
+package com.ifmg.termix.model
 
 import android.content.Context
 import android.text.InputFilter
@@ -7,6 +7,7 @@ import android.view.Gravity
 import android.widget.EditText
 import android.widget.GridLayout
 import androidx.core.content.ContextCompat
+import com.ifmg.termix.R
 
 class LettersGrid(private val context: Context, private val gridLayout: GridLayout) {
 
@@ -35,7 +36,9 @@ class LettersGrid(private val context: Context, private val gridLayout: GridLayo
                     textSize = 24f
                     maxLines = 1
                     filters = arrayOf(InputFilter.LengthFilter(1))
-                    background = ContextCompat.getDrawable(context, R.drawable.background_edit_text_letter_grid)
+                    background = ContextCompat.getDrawable(context,
+                        R.drawable.background_edit_text_letter_grid
+                    )
                     inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
                     showSoftInputOnFocus = false // Bloquear que o teclado do celular do usuário apareça
                     isFocusable = false
@@ -105,7 +108,9 @@ class LettersGrid(private val context: Context, private val gridLayout: GridLayo
             val editText = editTextList[currentRow][i]
 
             if (letter == correctWord[i]) {
-                editText.backgroundTintList = ContextCompat.getColorStateList(context, R.color.green)
+                editText.backgroundTintList = ContextCompat.getColorStateList(context,
+                    R.color.green
+                )
                 letterCounts[letter] = letterCounts[letter]!! - 1 // Reduz uma ocorrência
             }
         }
@@ -117,7 +122,9 @@ class LettersGrid(private val context: Context, private val gridLayout: GridLayo
 
             //Caso especial: se a palavra tiver letras iguais repetidas, se o usuário acertar somente a posição de uma delas, colocar em amarelo para indicar que ainda há uma letra igual a essa na palavra
             if (letter != correctWord[i] && letter in correctWord && letterCounts[letter]!! > 0) {
-                editText.backgroundTintList = ContextCompat.getColorStateList(context, R.color.yellow)
+                editText.backgroundTintList = ContextCompat.getColorStateList(context,
+                    R.color.yellow
+                )
                 letterCounts[letter] = letterCounts[letter]!! - 1 // Reduz uma ocorrência
             } else if (editText.backgroundTintList == null) { // Se usuário já acertou a posição de uma letra e repete ela em outra posição, indicar que essa letra não aparece mais na palavra
                 editText.backgroundTintList = ContextCompat.getColorStateList(context, R.color.gray)

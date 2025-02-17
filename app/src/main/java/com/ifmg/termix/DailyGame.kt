@@ -2,7 +2,6 @@ package com.ifmg.termix
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +22,7 @@ class DailyGame : AppCompatActivity() {
     private lateinit var keyboardGridController: KeyboardGridController
 
     private lateinit var correctWord: String
+    private val gameMode = "diario"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,16 +38,37 @@ class DailyGame : AppCompatActivity() {
             insets
         }
 
+        // Criar instância do controlador
         gameController = GameController(this)
+
+        //Iniciar partida
+        startNewGameSession()
 
         // Registrar eventos
         registerButtonEvents()
+
+        // Criar componentes da interface
         createLettersGrid()
         createKeyBoardGrid()
 
         // Sortear a palavra do jogo
         correctWord = getWordGame()
     }
+
+    // Iniciar uma nova partida se não houver uma partida em andamento
+    private fun startNewGameSession() {
+        val activeGameSession = gameController.getCurrentGameSession(gameMode)
+
+        //TODO restaurar a partida visualmente pegando os dados dados para montar o layout
+        if (activeGameSession != null) {
+            Toast.makeText(this, "Já existe uma partida ativa para o modo: $gameMode!", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Se não houver uma partida ativa, inicie uma nova
+        gameController.startNewGameSession(gameMode)
+    }
+
 
     // Criar a grade com as letras: linhas são as palavras que o usuário vai inserir, colunas são as tentativas usadas para acertar a palavra
     private fun createLettersGrid(){
@@ -126,7 +147,7 @@ class DailyGame : AppCompatActivity() {
         }*/
 
         // Salvar a palavra digitada
-        gameController.savePlayerWord(guess, letterGrid.currentRow)
+        gameController.savePlayerWord(gameMode, guess, letterGrid.currentRow)
 
         letterGrid.clearSelection()
 
@@ -186,21 +207,42 @@ class DailyGame : AppCompatActivity() {
     }
 
     private fun resetGameUI() {
-        // Resetar a palavra correta
-        correctWord = gameController.resetGame()
+        gameController.startNewGameSession(gameMode) // Criar uma nova partida ao resetar
 
-        // Resetar a grade de letras
+        correctWord = gameController.getRandomWord() // Obter nova palavra da partida
+
         letterGrid.clearLetterGrid()
-
-        // Resetar o teclado
         keyboardGridController.clearKeyboardColors()
 
-        // Habilitar os botões novamente
         keyboardGridController.setEnterButtonEnabled(true)
         keyboardGridController.enableKeyboard()
 
-        // Atualizar o texto de resposta
         dailyGameBinding.answerTxt.text = ""
     }
+
+    override fun onResume() {
+        super.onResume()
+
+        // Recuperar o estado da última partida do banco de dados ou da memória
+        val gameSession = gameController.getCurrentGameSession(gameMode) // ou buscar do banco diretamente
+
+        if (gameSession != null) {
+            // Preencher a grade com as palavras já digitadas
+            for (row in 0 until gameSession.attempt) {
+                val currentRowList = letterGrid.editTextList[row]
+                val guess = gameController.getPlayerWord(gameMode, row) // Método que retorna a palavra digitada para essa linha
+                if (guess != null) {
+                    for (column in 0 until currentRowList.size) {
+                        currentRowList[column].setText(guess[column].toString())
+                    }
+                }
+            }
+
+            // Restaurar o teclado com as cores e estados
+            keyboardGridController.restoreKeyboardState(gameSession) // Método para restaurar as cores e ações do teclado
+        }
+    }
+
+
 
 }

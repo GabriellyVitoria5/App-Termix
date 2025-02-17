@@ -6,7 +6,9 @@ import android.widget.Button
 import android.widget.GridLayout
 import androidx.core.content.ContextCompat
 import com.ifmg.termix.R
+import com.ifmg.termix.model.GameSession
 import com.ifmg.termix.model.KeyboardGrid
+import com.ifmg.termix.repository.PlayerWordsRepository
 
 class KeyboardGridController(
     private val context: Context,
@@ -16,6 +18,7 @@ class KeyboardGridController(
     private val onEnterPressed: () -> Unit
 ) {
     private val keyboardGridModel = KeyboardGrid()
+    private val playerWordsRepository = PlayerWordsRepository(context)
 
     // Criar o layout da grade do teclado na activity, cada letra será um botão do teclado
     fun createKeyboard() {
@@ -132,4 +135,16 @@ class KeyboardGridController(
             button.backgroundTintList = null
         }
     }
+
+    // Restaura o estado do teclado com base nas palavras digitadas nas tentativas
+    fun restoreKeyboardState(gameSession: GameSession) {
+        // Recuperar as tentativas já feitas
+        val playerWords = playerWordsRepository.getPlayerWordsForGameSession(gameSession.id)
+
+        // Para cada tentativa, atualiza as cores do teclado
+        for (playerWord in playerWords) {
+            updateKeyboardColors(playerWord.word, gameSession.word)
+        }
+    }
+
 }

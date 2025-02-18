@@ -59,9 +59,10 @@ class DailyGame : AppCompatActivity() {
     private fun startNewGameSession() {
         val activeGameSession = gameController.getCurrentGameSession(gameMode)
 
-        //TODO restaurar a partida visualmente pegando os dados dados para montar o layout
         if (activeGameSession != null) {
-            Toast.makeText(this, "Já existe uma partida ativa para o modo: $gameMode!", Toast.LENGTH_SHORT).show()
+            val idSession = gameController.getActiveGameId(gameMode)
+            Toast.makeText(this, "Já existe uma partida ativa de ID $idSession para o modo: $gameMode!", Toast.LENGTH_SHORT).show()
+
             return
         }
 
@@ -160,16 +161,18 @@ class DailyGame : AppCompatActivity() {
                 dailyGameBinding.answerTxt.text = "Acertou, parabéns!"
                 keyboardGridController.setEnterButtonEnabled(false)
                 keyboardGridController.disableKeyboard() // TODO corrigir problema visual de ir pra próxima linha depois de ganhar sem bloquear o teclado
+
+                // Jogar novamente
                 dailyGameBinding.answerTxt.setOnClickListener( {
-                    // jogar novamente
                     resetGameUI()
                 })
             } else if (letterGrid.currentRow == 6) {
                 dailyGameBinding.answerTxt.text = "A resposta certa era: $correctWord"
                 keyboardGridController.setEnterButtonEnabled(false)
                 keyboardGridController.disableKeyboard() // TODO desbloquear teclado depois de resolver o TODO de cima
+
+                // Jogar novamente
                 dailyGameBinding.answerTxt.setOnClickListener( {
-                    // jogar novamente
                     resetGameUI()
                 })
             }
@@ -220,23 +223,39 @@ class DailyGame : AppCompatActivity() {
         dailyGameBinding.answerTxt.text = ""
     }
 
+    // TODO Parece que o onResume é chamado mesmo quando é uma nova partida, ainda preciso verificar
     override fun onResume() {
         super.onResume()
 
-        // Recuperar o estado da última partida do banco de dados ou da memória
-        val gameSession = gameController.getCurrentGameSession(gameMode) // ou buscar do banco diretamente
+        // Recuperar o estado da última partida do banco de dados
+        val gameSession = gameController.getCurrentGameSession(gameMode)
+        //Toast.makeText(this, "Retornando partida $gameSession", Toast.LENGTH_SHORT).show()
 
         if (gameSession != null) {
+            val attemptCount = gameSession.attempt
+            val correctPreviusWord = gameController.getCorrectWord(gameMode)
+            correctWord = correctPreviusWord
+            //Toast.makeText(this, "Tentativas registradas: $attemptCount", Toast.LENGTH_SHORT).show()
+
             // Preencher a grade com as palavras já digitadas
-            for (row in 0 until gameSession.attempt) {
-                val currentRowList = letterGrid.editTextList[row]
-                val guess = gameController.getPlayerWord(gameMode, row) // Método que retorna a palavra digitada para essa linha
+            for (row in 0 until attemptCount) {
+                //Toast.makeText(this, "${gameSession.attempt}", Toast.LENGTH_SHORT).show()
+                val guess = gameController.getPlayerWord(gameMode, row)
+                letterGrid.currentRow = row
+
                 if (guess != null) {
-                    for (column in 0 until currentRowList.size) {
-                        currentRowList[column].setText(guess[column].toString())
+                    for (column in 0 until letterGrid.editTextList[row].size) {
+                        letterGrid.editTextList[row][column].setText(guess[column].toString())
                     }
+
+                    // Colorir as letras dessa linha
+                    letterGrid.colorLetters(guess, correctWord)
+
                 }
             }
+
+            letterGrid.currentRow  += 1
+            letterGrid.addSelectionInFirstColumn()
 
             // Restaurar o teclado com as cores e estados
             keyboardGridController.restoreKeyboardState(gameSession) // Método para restaurar as cores e ações do teclado

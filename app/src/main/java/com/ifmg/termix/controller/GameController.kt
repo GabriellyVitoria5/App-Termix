@@ -43,6 +43,7 @@ class GameController(var context: Context) {
         )
 
         val gameId = gameSessionRepository.insertGameSession(newGameSession)
+        Toast.makeText(context, "ID: $gameId", Toast.LENGTH_LONG).show()
 
         if (gameId != -1L) {
             activeGameSessions[mode] = gameId.toInt()
@@ -73,8 +74,8 @@ class GameController(var context: Context) {
     }
 
     // Recuperar uma partida ativa de um modo específico
-    fun getActiveGameId(mode: String): Int? {
-        return activeGameSessions[mode]
+    fun getActiveGameId(gameMode: String): Int? {
+        return gameSessionRepository.getActiveGameId(gameMode)
     }
 
     // Salvar a palavra digitada pelo usuário no banco e relacionar essas palavras com uma partida já iniciada
@@ -111,11 +112,12 @@ class GameController(var context: Context) {
 
     // Recuperar a partida de jogo ativa para um modo de jogo específico
     fun getCurrentGameSession(mode: String): GameSession? {
-        val gameId = getActiveGameId(mode) // Obter o id da partida ativa para o modo
+        val gameId = getActiveGameId(mode)
         return if (gameId != null) {
-            gameSessionRepository.getGameSessionById(gameId) // Buscar a partida ativa no repositório
+            val gameSession = gameSessionRepository.getGameSessionById(gameId)
+            gameSession?.copy(attempt = playerWordsRepository.getAttemptCount(gameId))
         } else {
-            null // Retorna null se não houver partida ativa para o modo
+            null
         }
     }
 
@@ -135,6 +137,17 @@ class GameController(var context: Context) {
         val playerWord = playerWords.find { it.attempt == attempt }
 
         return playerWord?.word // Retorna a palavra ou null se não encontrar
+    }
+
+    fun getPlayerWordsForGameSession(gameSessionId: Long): List<PlayerWords> {
+        val resultado = playerWordsRepository.getPlayerWordsForGameSession(gameSessionId)
+        Toast.makeText(context, "$resultado", Toast.LENGTH_SHORT).show()
+        return playerWordsRepository.getPlayerWordsForGameSession(gameSessionId)
+    }
+
+    // Recuperar a palavra correta da partida ativa para um modo específico
+    fun getCorrectWord(mode: String): String {
+        return gameSessionRepository.getCorrectWord(mode)!!
     }
 
 

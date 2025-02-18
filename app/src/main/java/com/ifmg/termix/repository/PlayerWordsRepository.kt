@@ -82,4 +82,17 @@ class PlayerWordsRepository(context: Context) {
         return playerWords
     }
 
+    // Retornar quantas tentativas o usuário usou para tentar descobrir a palavra
+    fun getAttemptCount(gameId: Int): Int {
+        val db = database.readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT COUNT(*) FROM ${DatabaseContract.PLAYER_WORDS.TABLE_NAME} WHERE ${DatabaseContract.PLAYER_WORDS.COLUMN_NAME_GAME_ID} = ?",
+            arrayOf(gameId.toString())
+        )
+
+        return cursor.use {
+            if (it.moveToFirst()) it.getInt(0) else 0
+        }
+    }
+
 }

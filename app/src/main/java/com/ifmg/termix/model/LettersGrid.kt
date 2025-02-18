@@ -94,7 +94,7 @@ class LettersGrid(private val context: Context, private val gridLayout: GridLayo
 
     // Colorir as letras da palavra informada pelo usuário conforme a regra:
     // Verde - posição correta; Amarela - Existe, mas não nessa posição; Cinza - não existe na palavra e caso especial de ocorrência das letras
-    private fun colorLetters(userWord: String, correctWord: String) {
+    fun colorLetters(userWord: String, correctWord: String) {
         val letterCounts = mutableMapOf<Char, Int>()
 
         // Contar quantas vezes cada letra aparece na palavra correta
@@ -134,7 +134,7 @@ class LettersGrid(private val context: Context, private val gridLayout: GridLayo
 
 
     // Adicionar um fundo de seleção na primeira coluna da linha atual
-    private fun addSelectionInFirstColumn() {
+    fun addSelectionInFirstColumn() {
         selectedColumn = 0
         editTextList[currentRow][selectedColumn].setBackgroundResource(R.drawable.background_edit_text_selected)
     }

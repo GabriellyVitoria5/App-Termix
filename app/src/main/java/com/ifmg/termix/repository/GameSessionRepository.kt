@@ -66,6 +66,24 @@ class GameSessionRepository(context: Context) {
         return isInProgress
     }
 
+    // Pegar o Id da partida em andamento
+    fun getActiveGameId(mode: String): Int? {
+        val db = database.readableDatabase
+        val cursor = db.query(
+            DatabaseContract.GAME_SESSION.TABLE_NAME,
+            arrayOf(DatabaseContract.GAME_SESSION.COLUMN_NAME_ID),
+            "${DatabaseContract.GAME_SESSION.COLUMN_NAME_MODE} = ? AND ${DatabaseContract.GAME_SESSION.COLUMN_NAME_STATUS} = ?",
+            arrayOf(mode, "andamento"),
+            null, null, null
+        )
+
+        return cursor.use {
+            if (it.moveToFirst()) {
+                it.getInt(it.getColumnIndexOrThrow(DatabaseContract.GAME_SESSION.COLUMN_NAME_ID))
+            } else null
+        }
+    }
+
     // Atualizar o status de uma partida: "nao_iniciada", "andamento", "vitoria", "derrota", "terminou"
     fun updateGameStatus(id: Int, newStatus: String): Int {
         val db = database.writableDatabase
@@ -80,6 +98,27 @@ class GameSessionRepository(context: Context) {
             arrayOf(id.toString())
         )
     }
+
+    // Recuperar a palavra correta da partida ativa
+    fun getCorrectWord(mode: String): String? {
+        val db = database.readableDatabase
+        val cursor = db.query(
+            DatabaseContract.GAME_SESSION.TABLE_NAME,
+            arrayOf(DatabaseContract.GAME_SESSION.COLUMN_NAME_WORD),
+            "${DatabaseContract.GAME_SESSION.COLUMN_NAME_MODE} = ? AND ${DatabaseContract.GAME_SESSION.COLUMN_NAME_STATUS} = ?",
+            arrayOf(mode, "andamento"),
+            null, null, null
+        )
+
+        return cursor.use {
+            if (it.moveToFirst()) {
+                it.getString(it.getColumnIndexOrThrow(DatabaseContract.GAME_SESSION.COLUMN_NAME_WORD))
+            } else {
+                null
+            }
+        }
+    }
+
 
 
 }

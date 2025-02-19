@@ -13,6 +13,7 @@ import com.ifmg.termix.controller.KeyboardGridController
 import com.ifmg.termix.databinding.ActivityDailyGameBinding
 import com.ifmg.termix.model.LettersGrid
 
+// TODO: atualmente o jogo não funciona buscando uma palavra por dia, ele funciona igual ao minigame infinito
 class DailyGame : AppCompatActivity() {
 
     private lateinit var dailyGameBinding: ActivityDailyGameBinding
@@ -39,8 +40,6 @@ class DailyGame : AppCompatActivity() {
             insets
         }
 
-
-        
         // Criar instância do controlador
         gameController = GameController(this)
 

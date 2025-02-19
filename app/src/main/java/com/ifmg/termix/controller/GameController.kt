@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Toast
 import com.ifmg.termix.model.GameSession
 import com.ifmg.termix.model.PlayerWords
 import com.ifmg.termix.repository.GameSessionRepository
@@ -25,10 +24,10 @@ class GameController(var context: Context) {
     private val activeGameSessions = mutableMapOf<String, Int>() // Maperar o modo de jogo e id da partida>
 
     // Criar uma nova partida de um minijogo ou jogo diário
-    fun startNewGameSession(mode: String) {
+    fun startNewGameSession(gameMode: String) {
 
         // Já existe uma partida em andamento, não criar uma partida nova
-        if (gameSessionRepository.isGameInProgress()) {
+        if (gameSessionRepository.isGameInProgress(gameMode)) {
             return
         }
 
@@ -42,7 +41,7 @@ class GameController(var context: Context) {
         val newGameSession = GameSession(
             id = 0,
             gameDate = System.currentTimeMillis().toString(),
-            mode = mode,
+            mode = gameMode,
             word = chosenWord,
             attempt = 0,
             status = "andamento"
@@ -51,7 +50,7 @@ class GameController(var context: Context) {
         // Iniciar uma nova partida em um modo de jogo
         val gameId = gameSessionRepository.insertGameSession(newGameSession)
         if (gameId != -1L) {
-            activeGameSessions[mode] = gameId.toInt()
+            activeGameSessions[gameMode] = gameId.toInt()
         }
     }
 
@@ -84,8 +83,8 @@ class GameController(var context: Context) {
     fun savePlayerWord(gameMode: String, word: String, attempt: Int) {
         val gameId = getActiveGameId(gameMode)
 
+        // Não foi encontrada uma partida em andamento para o modo de jogo indicado
         if (gameId == null) {
-            Toast.makeText(context, "Nenhuma partida ativa para o modo: $gameMode!", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -108,7 +107,6 @@ class GameController(var context: Context) {
         val newStatus = if (win) "vitoria" else "derrota"
         gameSessionRepository.updateGameStatus(gameId, newStatus)
 
-        Toast.makeText(context, "Partida ($gameMode) finalizada: $newStatus", Toast.LENGTH_SHORT).show()
         activeGameSessions.remove(gameMode) // Remover a partida finalizada
     }
 
@@ -144,7 +142,7 @@ class GameController(var context: Context) {
     // Recuperar palavras escritas por um jogador em uma partida em andamento
     fun getPlayerWordsForGameSession(gameSessionId: Long): List<PlayerWords> {
         val resultado = playerWordsRepository.getPlayerWordsForGameSession(gameSessionId)
-        Toast.makeText(context, "$resultado", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(context, "$resultado", Toast.LENGTH_SHORT).show()
         return playerWordsRepository.getPlayerWordsForGameSession(gameSessionId)
     }
 

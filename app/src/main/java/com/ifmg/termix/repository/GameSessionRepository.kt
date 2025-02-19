@@ -50,17 +50,15 @@ class GameSessionRepository(context: Context) {
     }
 
     // Verificar se já existe uma partida em andamento
-    fun isGameInProgress(): Boolean {
+    fun isGameInProgress(gameMode: String): Boolean {
         val db = database.readableDatabase
-        val cursor = db.query(
-            DatabaseContract.GAME_SESSION.TABLE_NAME,
-            null,
-            "${DatabaseContract.GAME_SESSION.COLUMN_NAME_STATUS} = ?",
-            arrayOf("andamento"), // Status de "andamento"
-            null, null, null
-        )
+        val query = "SELECT COUNT(*) FROM ${DatabaseContract.GAME_SESSION.TABLE_NAME} WHERE ${DatabaseContract.GAME_SESSION.COLUMN_NAME_MODE} = ? AND ${DatabaseContract.GAME_SESSION.COLUMN_NAME_STATUS} = 'andamento'"
+        val cursor = db.rawQuery(query, arrayOf(gameMode))
 
-        val isInProgress = cursor.use { it.moveToFirst() }
+        var isInProgress = false
+        if (cursor.moveToFirst()) {
+            isInProgress = cursor.getInt(0) > 0
+        }
         cursor.close()
 
         return isInProgress

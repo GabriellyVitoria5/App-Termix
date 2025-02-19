@@ -6,12 +6,15 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.ifmg.termix.controller.ProfileController
 import com.ifmg.termix.controller.WordController
 import com.ifmg.termix.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mainBinding: ActivityMainBinding
+
+    private lateinit var profileController: ProfileController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,8 +30,11 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        profileController = ProfileController(this)
+
         loadWordsToDatabase()
         registerButtonEvents()
+        createProfile()
     }
 
     // Configurar todos os eventos de botão
@@ -57,5 +63,13 @@ class MainActivity : AppCompatActivity() {
     private fun loadWordsToDatabase(){
         val gameController = WordController(this)
         gameController.loadWordsIfFirstRun()
+    }
+
+    // Criar um perfil para o jogador
+    private fun createProfile(){
+        val profile = profileController.getProfile(1)
+        if (profile == null) {
+            profileController.createProfile("Jogador Padrão", null)
+        }
     }
 }

@@ -9,8 +9,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.ifmg.termix.controller.GameController
+import com.ifmg.termix.controller.KeyboardGridController
 import com.ifmg.termix.databinding.ActivityDailyGameBinding
+import com.ifmg.termix.model.LettersGrid
 
+// TODO: atualmente o jogo não funciona buscando uma palavra por dia, ele funciona igual ao minigame infinito
 class DailyGame : AppCompatActivity() {
 
     private lateinit var dailyGameBinding: ActivityDailyGameBinding
@@ -18,9 +21,10 @@ class DailyGame : AppCompatActivity() {
     private lateinit var gameController: GameController
 
     private lateinit var letterGrid: LettersGrid
-    private lateinit var keyboardGrid: KeyboardGrid
+    private lateinit var keyboardGridController: KeyboardGridController
 
     private lateinit var correctWord: String
+    private val gameMode = "diario"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,16 +40,35 @@ class DailyGame : AppCompatActivity() {
             insets
         }
 
+        // Criar instância do controlador
         gameController = GameController(this)
 
-        // Registrar eventos
-        registerButtonEvents()
+        //Iniciar partida
+        startNewGameSession()
+
+        // Registrar eventos dos botões
+        registerButtonEvents(gameController)
         createLettersGrid()
         createKeyBoardGrid()
 
         // Sortear a palavra do jogo
         correctWord = getWordGame()
     }
+
+    // Iniciar uma nova partida se não houver uma partida em andamento
+    private fun startNewGameSession() {
+        val activeGameSession = gameController.getCurrentGameSession(gameMode)
+
+        // Já existe uma partida em andamento, não precisa criar uma nova
+        if (activeGameSession != null) {
+            gameController.getActiveGameId(gameMode)
+            return
+        }
+
+        // Inicia uma nova partida
+        gameController.startNewGameSession(gameMode)
+    }
+
 
     // Criar a grade com as letras: linhas são as palavras que o usuário vai inserir, colunas são as tentativas usadas para acertar a palavra
     private fun createLettersGrid(){
@@ -55,14 +78,14 @@ class DailyGame : AppCompatActivity() {
 
     // Criar a grade com o teclado: cada letra do alfabeto é um botão, mais os botões de enviar e apagar. Os botões já recebem ações que devem ser feitas ao serem clicados
     private fun createKeyBoardGrid() {
-        keyboardGrid = KeyboardGrid(
+        keyboardGridController = KeyboardGridController(
             context = this,
             gridLayout = dailyGameBinding.keyboardGridDaily,
             onLetterPressed = { letter -> insertLetter(letter) },
             onDeletePressed = { deleteLetter() },
             onEnterPressed = { submitWord() }
         )
-        keyboardGrid.createKeyboard()
+        keyboardGridController.createKeyboard()
     }
 
     // TODO Criar classe intermediária para adicionar os eventos dos botões para não ficar na classe da activity
@@ -118,37 +141,50 @@ class DailyGame : AppCompatActivity() {
         }
 
         // Usuário só pode informar palavras que estão no banco de dados local do jogo
-        /*if (!gameController.isWordInLocalDatabase(guess)) {
+        if (!gameController.isWordInLocalDatabase(guess)) {
             Toast.makeText(this, "Essa palavra não é aceita porque está na nossa lista", Toast.LENGTH_SHORT).show()
             return
-        }*/
+        }
 
         // Salvar a palavra digitada
-        gameController.savePlayerWord(guess, letterGrid.currentRow)
+        gameController.savePlayerWord(gameMode, guess, letterGrid.currentRow)
 
         letterGrid.clearSelection()
 
+        // Remover acento da palavra do banco para verificar corretamente se ela é igual a palavra do usuário
+        val correctWordNoAccent = gameController.removeLetterAccents(correctWord)
+
         if (letterGrid.currentRow < 6) {
-            val isCorrect = letterGrid.confirmWord(correctWord)
-            keyboardGrid.updateKeyboardColors(guess, correctWord)
+            val isCorrect = letterGrid.confirmWord(correctWordNoAccent)
+            keyboardGridController.updateKeyboardColors(guess, correctWord)
 
             // Verificar a resposta e bloquear o botão para não permitir enviar mais palavras
-            if (isCorrect || letterGrid.currentRow >= 6) {
+            if (isCorrect || letterGrid.currentRow > 6) { // TODO quando acerta na última ainda dá pra selecionar o campo
                 dailyGameBinding.answerTxt.text = "Acertou, parabéns!"
-                keyboardGrid.setEnterButtonEnabled(false)
-                keyboardGrid.disableKeyboard() // TODO corrigir problema visual de ir pra próxima linha depois de ganhar sem bloquear o teclado
-                dailyGameBinding.answerTxt.setOnClickListener(View.OnClickListener {
-                    // jogar novamente
+                keyboardGridController.setEnterButtonEnabled(false)
+                keyboardGridController.disableKeyboard() // TODO corrigir problema visual de ir pra próxima linha depois de ganhar sem bloquear o teclado
+
+                // Atualize status do jogo como finalizado
+                gameController.endGameSession(gameMode, true)
+
+                // Jogar novamente ao clicar no botão
+                dailyGameBinding.retryGameBtn.setVisibility(View.VISIBLE)
+                dailyGameBinding.retryGameBtn.setOnClickListener {
                     resetGameUI()
-                })
+                }
             } else if (letterGrid.currentRow == 6) {
                 dailyGameBinding.answerTxt.text = "A resposta certa era: $correctWord"
-                keyboardGrid.setEnterButtonEnabled(false)
-                keyboardGrid.disableKeyboard() // TODO desbloquear teclado depois de resolver o TODO de cima
-                dailyGameBinding.answerTxt.setOnClickListener(View.OnClickListener {
-                    // jogar novamente
+                keyboardGridController.setEnterButtonEnabled(false)
+                keyboardGridController.disableKeyboard() // TODO desbloquear teclado depois de resolver o TODO de cima
+                letterGrid.blockRow()
+
+                gameController.endGameSession(gameMode, false)
+
+                // Jogar novamente ao clicar no botão
+                dailyGameBinding.retryGameBtn.setVisibility(View.VISIBLE)
+                dailyGameBinding.retryGameBtn.setOnClickListener {
                     resetGameUI()
-                })
+                }
             }
         }
     }
@@ -159,7 +195,7 @@ class DailyGame : AppCompatActivity() {
 
         // Não foi possível escolher uma palavra para o jogo
         if(!gameController.validateWord(dailyWord)){
-            keyboardGrid.disableKeyboard()
+            keyboardGridController.disableKeyboard()
             Toast.makeText(this, "Erro ao buscar palavra! Não foi possível iniciar o jogo", Toast.LENGTH_LONG).show()
             return ""
         }
@@ -168,7 +204,7 @@ class DailyGame : AppCompatActivity() {
     }
 
     // Configurar todos os eventos de botão
-    private fun registerButtonEvents(){
+    private fun registerButtonEvents(gameController: GameController){
 
         // Voltar à tela inicial
         dailyGameBinding.backToHomeDailyBtn.setOnClickListener {
@@ -181,24 +217,74 @@ class DailyGame : AppCompatActivity() {
             val intent = Intent(this, Profile::class.java)
             startActivity(intent)
         }
+
+        // Mostrar regras do jogo em um pop up customizado
+        dailyGameBinding.ruleDailyBtn.setOnClickListener {
+            gameController.showPopup(R.layout.daily_rules)
+        }
     }
 
     private fun resetGameUI() {
-        // Resetar a palavra correta
-        correctWord = gameController.resetGame()
+        gameController.startNewGameSession(gameMode) // Criar uma nova partida ao resetar
 
-        // Resetar a grade de letras
+        correctWord = gameController.getRandomWord() // Obter nova palavra da partida
+
+        dailyGameBinding.retryGameBtn.setVisibility(View.INVISIBLE)
+
+        // Limpar grade do teclado e de letras
         letterGrid.clearLetterGrid()
+        keyboardGridController.clearKeyboardColors()
 
-        // Resetar o teclado
-        keyboardGrid.clearKeyboardColors()
+        keyboardGridController.setEnterButtonEnabled(true)
+        keyboardGridController.enableKeyboard()
 
-        // Habilitar os botões novamente
-        keyboardGrid.setEnterButtonEnabled(true)
-        keyboardGrid.enableKeyboard()
-
-        // Atualizar o texto de resposta
         dailyGameBinding.answerTxt.text = ""
     }
+
+    // Voltar o estado de uma partida em andamento
+    override fun onResume() {
+        super.onResume()
+
+        // Recuperar o estado da última partida do banco de dados (palavras inseridas pelo usuário e palavra escolhida)
+        val gameSession = gameController.getCurrentGameSession(gameMode)
+
+        // Verificar se existe uma partida em andamento
+        if (gameSession != null) {
+            val attemptCount = gameSession.attempt
+            val previousCorrectWord = gameController.getCorrectWord(gameMode)
+            correctWord = previousCorrectWord
+
+            // Preencher a grade de letras com as palavras já informadas antes e deixar a
+            for (row in 0 until attemptCount) {
+                val guess = gameController.getPlayerWord(gameMode, row)
+                letterGrid.currentRow = row
+
+                if (guess != null) {
+                    for (column in 0 until letterGrid.editTextList[row].size) {
+                        letterGrid.editTextList[row][column].setText(guess[column].toString())
+                        letterGrid.clearSelection() // Bloquear linha e tirar a selação
+                    }
+
+                    // Colorir as letras dessa linha
+                    letterGrid.colorLetters(guess, correctWord)
+
+                }
+            }
+
+            // Corrigir problema que não pulava uma linha ao recuperar uma partida
+            if(attemptCount > 0){
+                letterGrid.currentRow  += 1
+            }
+
+            // Colocar uma seleção no começo da linha em que o jogador parou
+            letterGrid.blockRow()
+            letterGrid.addSelectionInFirstColumn()
+
+            // Restaurar o estado do teclado (cores dos botões com base nas respostas anteriores)
+            keyboardGridController.restoreKeyboardState(gameSession)
+        }
+    }
+
+
 
 }

@@ -1,4 +1,4 @@
-package com.ifmg.termix
+package com.ifmg.termix.model
 
 import android.content.Context
 import android.text.InputFilter
@@ -7,6 +7,7 @@ import android.view.Gravity
 import android.widget.EditText
 import android.widget.GridLayout
 import androidx.core.content.ContextCompat
+import com.ifmg.termix.R
 
 class LettersGrid(private val context: Context, private val gridLayout: GridLayout) {
 
@@ -35,7 +36,9 @@ class LettersGrid(private val context: Context, private val gridLayout: GridLayo
                     textSize = 24f
                     maxLines = 1
                     filters = arrayOf(InputFilter.LengthFilter(1))
-                    background = ContextCompat.getDrawable(context, R.drawable.background_edit_text_letter_grid)
+                    background = ContextCompat.getDrawable(context,
+                        R.drawable.background_edit_text_letter_grid
+                    )
                     inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
                     showSoftInputOnFocus = false // Bloquear que o teclado do celular do usuário apareça
                     isFocusable = false
@@ -63,6 +66,7 @@ class LettersGrid(private val context: Context, private val gridLayout: GridLayo
         addSelectionInFirstColumn()
     }
 
+    // TODO mudar método para GameController
     // Verificar se jogador acertou a palavra
     fun confirmWord(correctWord: String): Boolean {
         val userWord = editTextList[currentRow].joinToString("") { it.text.toString().uppercase() }
@@ -72,7 +76,7 @@ class LettersGrid(private val context: Context, private val gridLayout: GridLayo
 
         // Usuário acertou a palavra
         if (userWord == correctWord) {
-            if (currentRow < rows - 1) { // Corrigir problema: jogo estava indo para a próxima e ultrapassava a quantidade de tentativas
+            if (currentRow < rows - 1) { // Corrigir problema: jogo estava indo para a próxima linha e ultrapassava a quantidade de tentativas
                 currentRow++
             }
             return true
@@ -91,7 +95,7 @@ class LettersGrid(private val context: Context, private val gridLayout: GridLayo
 
     // Colorir as letras da palavra informada pelo usuário conforme a regra:
     // Verde - posição correta; Amarela - Existe, mas não nessa posição; Cinza - não existe na palavra e caso especial de ocorrência das letras
-    private fun colorLetters(userWord: String, correctWord: String) {
+    fun colorLetters(userWord: String, correctWord: String) {
         val letterCounts = mutableMapOf<Char, Int>()
 
         // Contar quantas vezes cada letra aparece na palavra correta
@@ -105,7 +109,9 @@ class LettersGrid(private val context: Context, private val gridLayout: GridLayo
             val editText = editTextList[currentRow][i]
 
             if (letter == correctWord[i]) {
-                editText.backgroundTintList = ContextCompat.getColorStateList(context, R.color.green)
+                editText.backgroundTintList = ContextCompat.getColorStateList(context,
+                    R.color.green
+                )
                 letterCounts[letter] = letterCounts[letter]!! - 1 // Reduz uma ocorrência
             }
         }
@@ -117,7 +123,9 @@ class LettersGrid(private val context: Context, private val gridLayout: GridLayo
 
             //Caso especial: se a palavra tiver letras iguais repetidas, se o usuário acertar somente a posição de uma delas, colocar em amarelo para indicar que ainda há uma letra igual a essa na palavra
             if (letter != correctWord[i] && letter in correctWord && letterCounts[letter]!! > 0) {
-                editText.backgroundTintList = ContextCompat.getColorStateList(context, R.color.yellow)
+                editText.backgroundTintList = ContextCompat.getColorStateList(context,
+                    R.color.yellow
+                )
                 letterCounts[letter] = letterCounts[letter]!! - 1 // Reduz uma ocorrência
             } else if (editText.backgroundTintList == null) { // Se usuário já acertou a posição de uma letra e repete ela em outra posição, indicar que essa letra não aparece mais na palavra
                 editText.backgroundTintList = ContextCompat.getColorStateList(context, R.color.gray)
@@ -127,7 +135,7 @@ class LettersGrid(private val context: Context, private val gridLayout: GridLayo
 
 
     // Adicionar um fundo de seleção na primeira coluna da linha atual
-    private fun addSelectionInFirstColumn() {
+    fun addSelectionInFirstColumn() {
         selectedColumn = 0
         editTextList[currentRow][selectedColumn].setBackgroundResource(R.drawable.background_edit_text_selected)
     }

@@ -46,16 +46,13 @@ class InfiniteMinigame : AppCompatActivity() {
         //Iniciar partida
         startNewGameSession()
 
-        // Registrar eventos dos botões
+        // Registrar eventos
         registerButtonEvents(gameController)
         createLettersGrid()
         createKeyBoardGrid()
 
         // Sortear a palavra do jogo
         correctWord = getWordGame()
-
-        // Registrar eventos
-        registerButtonEvents(gameController)
     }
 
     // Iniciar uma nova partida se não houver uma partida em andamento
@@ -74,7 +71,7 @@ class InfiniteMinigame : AppCompatActivity() {
 
     // Criar a grade com as letras: linhas são as palavras que o usuário vai inserir, colunas são as tentativas usadas para acertar a palavra
     private fun createLettersGrid(){
-        letterGrid = LettersGrid(this, infiniteMinigameBinding.lettersGridInfinte)
+        letterGrid = LettersGrid(this, infiniteMinigameBinding.lettersGridInfinite)
         letterGrid.createGrid()
     }
 

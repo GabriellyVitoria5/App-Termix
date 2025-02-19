@@ -76,10 +76,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title_infinite_minigame"
-        app:layout_constraintBottom_toTopOf="@+id/letters_grid_infinte"/>
+        app:layout_constraintBottom_toTopOf="@+id/letters_grid_infinite"/>
 
     <GridLayout
-        android:id="@+id/letters_grid_infinte"
+        android:id="@+id/letters_grid_infinite"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_32"
@@ -106,7 +106,7 @@
         android:layout_marginBottom="@dimen/margin_32"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/letters_grid_infinte"
+        app:layout_constraintTop_toBottomOf="@+id/letters_grid_infinite"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

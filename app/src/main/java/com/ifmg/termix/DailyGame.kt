@@ -39,6 +39,8 @@ class DailyGame : AppCompatActivity() {
             insets
         }
 
+
+        
         // Criar instância do controlador
         gameController = GameController(this)
 
@@ -46,9 +48,7 @@ class DailyGame : AppCompatActivity() {
         startNewGameSession()
 
         // Registrar eventos dos botões
-        registerButtonEvents()
-
-        // Criar componentes da interface
+        registerButtonEvents(gameController)
         createLettersGrid()
         createKeyBoardGrid()
 
@@ -202,7 +202,7 @@ class DailyGame : AppCompatActivity() {
     }
 
     // Configurar todos os eventos de botão
-    private fun registerButtonEvents(){
+    private fun registerButtonEvents(gameController: GameController){
 
         // Voltar à tela inicial
         dailyGameBinding.backToHomeDailyBtn.setOnClickListener {
@@ -214,6 +214,11 @@ class DailyGame : AppCompatActivity() {
         dailyGameBinding.profileDailyBtn.setOnClickListener {
             val intent = Intent(this, Profile::class.java)
             startActivity(intent)
+        }
+
+        // Mostrar regras do jogo em um pop up customizado
+        dailyGameBinding.ruleDailyBtn.setOnClickListener {
+            gameController.showPopup(R.layout.daily_rules)
         }
     }
 

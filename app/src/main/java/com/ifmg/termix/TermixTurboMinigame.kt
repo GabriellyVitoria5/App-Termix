@@ -6,11 +6,14 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.ifmg.termix.controller.GameController
 import com.ifmg.termix.databinding.ActivityTermixTurboMinigameBinding
 
 class TermixTurboMinigame : AppCompatActivity() {
 
     private lateinit var termixTurboMinigameBinding: ActivityTermixTurboMinigameBinding
+
+    private lateinit var gameController: GameController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,11 +29,14 @@ class TermixTurboMinigame : AppCompatActivity() {
             insets
         }
 
-        registerButtonEvents()
+        // Criar instância do controller
+        gameController = GameController(this)
+
+        registerButtonEvents(gameController)
     }
 
     // Configurar todos os eventos de botão
-    private fun registerButtonEvents(){
+    private fun registerButtonEvents(gameController: GameController){
 
         // Voltar à tela de minijogos
         termixTurboMinigameBinding.backToHomeTurboBtn.setOnClickListener {
@@ -42,6 +48,11 @@ class TermixTurboMinigame : AppCompatActivity() {
         termixTurboMinigameBinding.profileTurboBtn.setOnClickListener {
             val intent = Intent(this, Profile::class.java)
             startActivity(intent)
+        }
+
+        // Mostrar regras do jogo em um pop up customizado
+        termixTurboMinigameBinding.ruleTurboBtn.setOnClickListener {
+            gameController.showPopup(R.layout.turbo_rules)
         }
     }
 }

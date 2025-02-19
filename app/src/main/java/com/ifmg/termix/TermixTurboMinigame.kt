@@ -9,6 +9,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.ifmg.termix.controller.GameController
 import com.ifmg.termix.databinding.ActivityTermixTurboMinigameBinding
 import java.util.Locale
 
@@ -21,6 +22,8 @@ class TermixTurboMinigame : AppCompatActivity() {
     private var countDownTimer: CountDownTimer? = null
     private var timeLeftInMillis: Long = 60000 // Inicia com 1 minuto = 60000 milissegundos
     private var wordsGuessedCorrectly = 0 // Variável para contar as palavras corretas
+
+    private lateinit var gameController: GameController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,21 +43,13 @@ class TermixTurboMinigame : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        
+        // Criar instância do controller
+        gameController = GameController(this)
 
-        // Registra eventos de botão
-        registerButtonEvents()
+        registerButtonEvents(gameController)
 
-        // Inicia o timer
         startTimer()
-
-        // Configura botões de aumentar e diminuir tempo
-        increaseTimeBtn.setOnClickListener {
-            changeTime(0.5) // Aumenta 30 segundos
-        }
-
-        decreaseTimeBtn.setOnClickListener {
-            changeTime(-0.5) // Diminui 30 segundos
-        }
     }
 
     private fun startTimer() {
@@ -86,21 +81,9 @@ class TermixTurboMinigame : AppCompatActivity() {
         startTimer() // Reinicia o timer com o novo tempo
     }
 
-    // TODO: adicionar a lógica para verificar se a palavra foi adivinhada corretamente
-    private fun onWordGuessedCorrectly() {
-        wordsGuessedCorrectly++
-        // Aqui você pode adicionar mais lógica, como feedback para o jogador
-    }
+    // Configurar todos os eventos de botão
+    private fun registerButtonEvents(gameController: GameController){
 
-    // TODO: adicionar a lógica para interromper o jogo quando o timer chegar a 00:00
-    private fun endGame() {
-        // Exibe o número de palavras corretas ao final do jogo
-        // Aqui você pode fazer algo com a variável `wordsGuessedCorrectly`
-        // Exemplo: mostrar um diálogo ou uma nova tela com a quantidade de acertos
-    }
-
-    // Configura todos os eventos de botão
-    private fun registerButtonEvents() {
         // Volta à tela de minijogos
         termixTurboMinigameBinding.backToHomeTurboBtn.setOnClickListener {
             val intent = Intent(this, MinigamesHome::class.java)
@@ -111,6 +94,20 @@ class TermixTurboMinigame : AppCompatActivity() {
         termixTurboMinigameBinding.profileTurboBtn.setOnClickListener {
             val intent = Intent(this, Profile::class.java)
             startActivity(intent)
+        }
+
+        // Mostrar regras do jogo em um pop up customizado
+        termixTurboMinigameBinding.ruleTurboBtn.setOnClickListener {
+            gameController.showPopup(R.layout.turbo_rules)
+        }
+        
+        // Configura botões de aumentar e diminuir tempo
+        increaseTimeBtn.setOnClickListener {
+            changeTime(0.5) // Aumenta 30 segundos
+        }
+
+        decreaseTimeBtn.setOnClickListener {
+            changeTime(-0.5) // Diminui 30 segundos
         }
     }
 

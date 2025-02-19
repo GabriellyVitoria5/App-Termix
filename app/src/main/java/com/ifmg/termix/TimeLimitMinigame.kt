@@ -9,6 +9,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.ifmg.termix.controller.GameController
 import com.ifmg.termix.databinding.ActivityTimeLimitMinigameBinding
 import java.util.Locale
 
@@ -21,6 +22,8 @@ class TimeLimitMinigame : AppCompatActivity() {
     private var countDownTimer: CountDownTimer? = null
     private var timeLeftInMillis: Long = 60000 // Inicia com 1 minuto = 60000 milissegundos
     private var isGameWon = false // Variável que indica se o jogador acertou a palavra
+
+    private lateinit var gameController: GameController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,21 +43,13 @@ class TimeLimitMinigame : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        
+        // Criar instância do controller
+        gameController = GameController(this)
 
-        // Registra eventos de botão
-        registerButtonEvents()
+        registerButtonEvents(gameController)
 
-        // Inicia o timer
         startTimer()
-
-        // Configura botões de aumentar e diminuir tempo
-        increaseTimeBtn.setOnClickListener {
-            changeTime(0.5) // Aumenta 30 segundos
-        }
-
-        decreaseTimeBtn.setOnClickListener {
-            changeTime(-0.5) // Diminui 30 segundos
-        }
     }
 
     private fun startTimer() {
@@ -97,20 +92,9 @@ class TimeLimitMinigame : AppCompatActivity() {
         startTimer() // Reinicia o timer com o novo tempo
     }
 
-    // TODO: adicionar a lógica para verificar se a palavra foi adivinhada corretamente
-    private fun onWordGuessedCorrectly() {
-        isGameWon = true
-        // Para o timer quando o jogador acertar
-        cancelTimer()
-        // Ação adicional quando o jogador acertar
-        // Você pode adicionar lógica para mostrar uma tela de vitória ou outra coisa
-    }
+    // Configurar todos os eventos de botão
+    private fun registerButtonEvents(gameController: GameController){
 
-    // TODO: adicionar a lógica para interromper o jogo quando o timer chegar a 00:00
-    private fun endGame() {}
-
-    // Configura todos os eventos de botão
-    private fun registerButtonEvents() {
         // Volta à tela de minijogos
         timeLimitMinigameBinding.backToHomeTimeLimitBtn.setOnClickListener {
             val intent = Intent(this, MinigamesHome::class.java)
@@ -121,6 +105,20 @@ class TimeLimitMinigame : AppCompatActivity() {
         timeLimitMinigameBinding.profileTimeLimiteBtn.setOnClickListener {
             val intent = Intent(this, Profile::class.java)
             startActivity(intent)
+        }
+
+        // Mostrar regras do jogo em um pop up customizado
+        tileLimiteMinigameBinding.ruleTimeLimiteBtn.setOnClickListener {
+            gameController.showPopup(R.layout.time_rules)
+        }
+        
+        // Configura botões de aumentar e diminuir tempo
+        increaseTimeBtn.setOnClickListener {
+            changeTime(0.5) // Aumenta 30 segundos
+        }
+
+        decreaseTimeBtn.setOnClickListener {
+            changeTime(-0.5) // Diminui 30 segundos
         }
     }
 

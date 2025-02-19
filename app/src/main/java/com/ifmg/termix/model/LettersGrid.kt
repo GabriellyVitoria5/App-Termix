@@ -66,6 +66,7 @@ class LettersGrid(private val context: Context, private val gridLayout: GridLayo
         addSelectionInFirstColumn()
     }
 
+    // TODO mudar método para GameController
     // Verificar se jogador acertou a palavra
     fun confirmWord(correctWord: String): Boolean {
         val userWord = editTextList[currentRow].joinToString("") { it.text.toString().uppercase() }

@@ -36,4 +36,8 @@
     <string name="rule_example_r">R</string>
     <string name="rule_example_a">A</string>
     <string name="desc_retry_btn">Botão para começar um novo jogo</string>
+    <string name="_01_00">01:00</string>
+    <string name="_00_00">00:00</string>
+    <string name="desc_decrease_time">-</string>
+    <string name="desc_increase_time">+</string>
 </resources>

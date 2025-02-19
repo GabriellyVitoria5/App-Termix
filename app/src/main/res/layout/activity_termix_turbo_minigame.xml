@@ -43,7 +43,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/title_daily"
+        android:id="@+id/title_turbo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/termix_turbo_minigame"
@@ -54,4 +54,42 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageButton
+        android:id="@+id/decrease_time_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/ic_minus"
+        android:contentDescription="@string/desc_decrease_time"
+        android:padding="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/time_display"
+        app:layout_constraintTop_toBottomOf="@id/title_turbo" />
+
+    <TextView
+        android:id="@+id/time_display"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/_01_00"
+        android:textSize="@dimen/font_20"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toEndOf="@id/decrease_time_btn"
+        app:layout_constraintEnd_toStartOf="@id/increase_time_btn"
+        app:layout_constraintTop_toBottomOf="@id/title_turbo"
+        app:layout_constraintHorizontal_bias="0.5" />
+
+    <ImageButton
+        android:id="@+id/increase_time_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/ic_plus"
+        android:contentDescription="@string/desc_increase_time"
+        android:padding="15dp"
+        app:layout_constraintStart_toEndOf="@id/time_display"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title_turbo" />
 </androidx.constraintlayout.widget.ConstraintLayout>

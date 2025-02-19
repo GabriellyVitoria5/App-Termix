@@ -87,14 +87,17 @@ Para uma melhor visualização do projeto, abaixo estão algumas capturas de tel
 4. Tela de Minijogos:
 ![Imagem da tela de minijogos](screenshots/minijogos.png)
 
-5. Tela de regras do Modo Infinito (ainda em desenvolvimento):
+5. Tela de regras do Modo Infinito:
 ![Imagem das regras do modo Infinito](screenshots/exemploRegras.png)
 
-6. Tela de esboço do Jogo Infinito (ainda em desenvolvimento):
-![Imagem do modo Infinito](screenshots/esbocoModoLimite.png)
+6. Tela do modo Jogo Infinito:
+![Imagem do modo Infinito](screenshots/modoInfinito.png)
 
-7. Tela de regras do Modo Turbo (ainda em desenvolvimento):
-![Imagem das regras do modo turbo](screenshots/regrasModoTurbo.png)
+7. Tela do Modo Limite de Tempo:
+![Imagem do modo Limite de Tempo](screenshots/modoLimiteTempo.png)
+
+8. Tela do Modo Turbo:
+![Imagem do modo turbo](screenshots/modoTurbo.png)
 
 ## Configuração e Build
 

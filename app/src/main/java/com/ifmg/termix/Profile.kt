@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.ifmg.termix.adapter.CalendarAdapter
+import com.ifmg.termix.controller.ProfileController
 import com.ifmg.termix.databinding.ActivityProfileBinding
 import com.ifmg.termix.utils.CalendarUtils
 import java.util.*
@@ -12,11 +13,15 @@ class Profile : AppCompatActivity() {
 
     private lateinit var profileBinding: ActivityProfileBinding
 
+    private lateinit var profileController: ProfileController
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         profileBinding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(profileBinding.root)
+
+        profileController = ProfileController(this)
 
         registerButtonEvents()
         setupCalendar()
@@ -46,15 +51,20 @@ class Profile : AppCompatActivity() {
     }
 
     private fun setupStats() {
-        // TODO: Substituir por valores reais do banco de dados
-        val fakeGamesPerMode = 15
-        val fakeWinStreak = 5
-        val fakeTotalVictories = 42
-        val fakeTotalLosses = 12
+        val profile = profileController.getProfile(1)
 
-        profileBinding.gamesPerMode.text = "$fakeGamesPerMode"
-        profileBinding.winStreak.text = "$fakeWinStreak"
-        profileBinding.victories.text = "$fakeTotalVictories"
-        profileBinding.losses.text = "$fakeTotalLosses"
+        profile?.let {
+            profileBinding.gamesPerMode.text = it.totalGamesPlayed.toString()
+            profileBinding.winStreak.text = "0" // Você pode calcular a sequência de vitórias se quiser
+            profileBinding.victories.text = it.victories.toString()
+            profileBinding.losses.text = it.losses.toString()
+        } ?: run {
+            // Se o perfil não existir, manter valores padrão
+            profileBinding.gamesPerMode.text = "0"
+            profileBinding.winStreak.text = "0"
+            profileBinding.victories.text = "0"
+            profileBinding.losses.text = "0"
+        }
     }
+
 }

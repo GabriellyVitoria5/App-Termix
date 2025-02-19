@@ -35,4 +35,5 @@
     <string name="rule_example_e">E</string>
     <string name="rule_example_r">R</string>
     <string name="rule_example_a">A</string>
+    <string name="desc_retry_btn">Botão para começar um novo jogo</string>
 </resources>

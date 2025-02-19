@@ -13,12 +13,17 @@ class DatabaseSQLite(context: Context) : SQLiteOpenHelper(
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL(DatabaseContract.WORD.SQL_CREATE)
         db?.execSQL(DatabaseContract.PLAYER_WORDS.SQL_CREATE)
+        db?.execSQL(DatabaseContract.GAME_SESSION.SQL_CREATE)
         db?.execSQL(DatabaseContract.PROFILE.SQL_CREATE)
         db?.execSQL(DatabaseContract.CALENDAR.SQL_CREATE)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        db?.execSQL(DatabaseContract.SQL_DROP_TABLES)
+        db?.execSQL(DatabaseContract.WORD.SQL_DROP)
+        db?.execSQL(DatabaseContract.PLAYER_WORDS.SQL_DROP)
+        db?.execSQL(DatabaseContract.GAME_SESSION.SQL_DROP)
+        db?.execSQL(DatabaseContract.PROFILE.SQL_DROP)
+        db?.execSQL(DatabaseContract.CALENDAR.SQL_DROP)
         onCreate(db)
     }
 

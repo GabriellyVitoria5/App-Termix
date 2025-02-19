@@ -20,8 +20,7 @@ class TermixTurboMinigame : AppCompatActivity() {
     private lateinit var increaseTimeBtn: ImageButton
     private lateinit var decreaseTimeBtn: ImageButton
     private var countDownTimer: CountDownTimer? = null
-    private var timeLeftInMillis: Long = 60000 // Inicia com 1 minuto = 60000 milissegundos
-    private var wordsGuessedCorrectly = 0 // Variável para contar as palavras corretas
+    private var timeLeftInMillis: Long = 60000 // Inicia com 1 minuto
 
     private lateinit var gameController: GameController
 
@@ -66,8 +65,6 @@ class TermixTurboMinigame : AppCompatActivity() {
 
             override fun onFinish() {
                 timerText.text = getString(R.string._00_00)
-                // Quando o tempo acabar, você pode mostrar o número de palavras corretas
-                endGame()
             }
         }.start()
     }
@@ -101,19 +98,20 @@ class TermixTurboMinigame : AppCompatActivity() {
             gameController.showPopup(R.layout.turbo_rules)
         }
         
-        // Configura botões de aumentar e diminuir tempo
+        // Aumentar tempo em 30 segundos
         increaseTimeBtn.setOnClickListener {
-            changeTime(0.5) // Aumenta 30 segundos
+            changeTime(0.5)
         }
 
+        // Diminuir tempo em 30 segundos
         decreaseTimeBtn.setOnClickListener {
-            changeTime(-0.5) // Diminui 30 segundos
+            changeTime(-0.5)
         }
     }
 
+    // Cancelar o timer se a activity for destruída antes de terminar
     override fun onDestroy() {
         super.onDestroy()
-        // Cancela o timer se a activity for destruída antes de terminar
         countDownTimer?.cancel()
     }
 }

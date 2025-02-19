@@ -20,7 +20,7 @@ class TimeLimitMinigame : AppCompatActivity() {
     private lateinit var increaseTimeBtn: ImageButton
     private lateinit var decreaseTimeBtn: ImageButton
     private var countDownTimer: CountDownTimer? = null
-    private var timeLeftInMillis: Long = 60000 // Inicia com 1 minuto = 60000 milissegundos
+    private var timeLeftInMillis: Long = 60000 // Inicia com 1 minuto
     private var isGameWon = false // Variável que indica se o jogador acertou a palavra
 
     private lateinit var gameController: GameController
@@ -73,7 +73,7 @@ class TimeLimitMinigame : AppCompatActivity() {
                 timerText.text = getString(R.string._00_00)
                 // TODO: adicionar a lógica para interromper o jogo quando o timer chegar a 00:00
                 if (!isGameWon) {
-                    endGame() // Finaliza o jogo se o tempo acabar e o jogador não tiver ganhado
+                    // Finaliza o jogo se o tempo acabar e o jogador não tiver ganhado
                 }
             }
         }.start()
@@ -108,23 +108,24 @@ class TimeLimitMinigame : AppCompatActivity() {
         }
 
         // Mostrar regras do jogo em um pop up customizado
-        tileLimiteMinigameBinding.ruleTimeLimiteBtn.setOnClickListener {
+        timeLimitMinigameBinding.ruleTimeLimiteBtn.setOnClickListener {
             gameController.showPopup(R.layout.time_rules)
         }
-        
-        // Configura botões de aumentar e diminuir tempo
+
+        // Aumentar tempo em 30 segundos
         increaseTimeBtn.setOnClickListener {
-            changeTime(0.5) // Aumenta 30 segundos
+            changeTime(0.5)
         }
 
+        // Diminuir tempo em 30 segundos
         decreaseTimeBtn.setOnClickListener {
-            changeTime(-0.5) // Diminui 30 segundos
+            changeTime(-0.5)
         }
     }
 
+    // Cancelar o timer se a activity for destruída antes de terminar
     override fun onDestroy() {
         super.onDestroy()
-        // Cancela o timer se a activity for destruída antes de terminar
         countDownTimer?.cancel()
     }
 }

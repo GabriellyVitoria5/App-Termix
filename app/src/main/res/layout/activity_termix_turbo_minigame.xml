@@ -72,7 +72,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/_01_00"
-        android:textSize="@dimen/font_32"
+        android:textSize="@dimen/font_20"
         android:textStyle="bold"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toEndOf="@id/decrease_time_btn"

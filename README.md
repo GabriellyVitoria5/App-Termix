@@ -20,7 +20,6 @@ base de palavras local armazenada no dispositivo.
 
 ## Diferenciais do Projeto
 
-- Algoritmo de verificação de palavras otimizado para melhor desempenho.
 - Design responsivo e acessível para diferentes tamanhos de tela.
 - Diferentes modos de jogo para aumentar a rejogabilidade.
 - Experiência offline sem necessidade de conexão com a internet.

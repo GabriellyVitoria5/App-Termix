@@ -20,13 +20,12 @@ base de palavras local armazenada no dispositivo.
 
 ## Diferenciais do Projeto
 
-- Design responsivo e acessível para diferentes tamanhos de tela.
-- Diferentes modos de jogo para aumentar a rejogabilidade.
+- Diferentes modos de jogo para aumentar a jogabilidade.
 - Experiência offline sem necessidade de conexão com a internet.
 
 ## Estrutura do Projeto
 
-O projeto está organizado dentro do Android Studio, utilizando Kotlin e Java. Abaixo está uma visão
+O projeto está organizado dentro do Android Studio, utilizando a linguagem Kotlin. Abaixo está uma visão
 geral da estrutura do código:
 
 ### Pacotes Principais
@@ -36,16 +35,15 @@ geral da estrutura do código:
 - **controller**: Contém a lógica do jogo, incluindo `GameController` e `WordController`.
 - **localdata**: Contém as classes de banco de dados, incluindo `DatabaseContract` e
   `DatabaseSQLite`.
-- **model**: Contém as classes modelo do jogo, como `CalendarDay`, `PlayerWords` e `Word`.
-- **repository**: Contém as classes responsáveis pelo acesso a dados, como `PlayerWordRepository` e
-  `WordRepository`.
+- **model**: Contém as classes modelo do jogo, como `Word`, `PlayerWords`, `CalendarDay`, `GameSession`, `LettersGrid` e `KeyboardGrid`.
+- **repository**: Contém as classes responsáveis pelo acesso a dados, como `WordRepository`, `PlayerWordRepository` e `GameSessionRepository`.
 - **utils**: Contém utilitários como `CalendarUtils` para ajudar na manipulação de datas.
 - **Atividades Principais**: Inclui `MainActivity`, `DailyGame`, `InfiniteMinigame`,
   `MinigamesHome`, `Profile`, `TermixTurboMinigame` e `TimeLimitMinigame`.
 
 ## Tecnologias Utilizadas
 
-- **Linguagem**: Kotlin, Java
+- **Linguagem**: Kotlin
 - **Banco de Dados**: SQLite
 
 ## Banco de Dados
@@ -63,8 +61,7 @@ todas as palavras possíveis para o jogo.
 
 - Implementação de rankings e estatísticas de desempenho.
 - Integração com serviços online para jogar com amigos.
-- Personalização do tema, interface do jogo e foto de perfil.
-- Suporte a diferentes idiomas.
+- Personalização do tema, interface do jogo e melhorar o perfil.
 
 ## Layout e Recursos Visuais
 

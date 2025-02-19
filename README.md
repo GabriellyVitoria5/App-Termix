@@ -32,11 +32,11 @@ geral da estrutura do código:
 
 - **adapter**: Contém adaptadores para manipulação de elementos de interface, como o
   `CalendarAdapter.kt`.
-- **controller**: Contém a lógica do jogo, incluindo `GameController` e `WordController`.
+- **controller**: Contém a lógica do jogo, incluindo `GameController`, `KeyboardController`, `ProfileController`,  e `WordController`.
 - **localdata**: Contém as classes de banco de dados, incluindo `DatabaseContract` e
   `DatabaseSQLite`.
-- **model**: Contém as classes modelo do jogo, como `Word`, `PlayerWords`, `CalendarDay`, `GameSession`, `LettersGrid` e `KeyboardGrid`.
-- **repository**: Contém as classes responsáveis pelo acesso a dados, como `WordRepository`, `PlayerWordRepository` e `GameSessionRepository`.
+- **model**: Contém as classes modelo do jogo, como `Word`, `PlayerWords`, `CalendarDay`, `GameSession`, `LettersGrid` `Profile` e `KeyboardGrid`.
+- **repository**: Contém as classes responsáveis pelo acesso a dados, como `WordRepository`, `PlayerWordRepository` `ProfileRepository` e `GameSessionRepository`.
 - **utils**: Contém utilitários como `CalendarUtils` para ajudar na manipulação de datas.
 - **Atividades Principais**: Inclui `MainActivity`, `DailyGame`, `InfiniteMinigame`,
   `MinigamesHome`, `Profile`, `TermixTurboMinigame` e `TimeLimitMinigame`.
@@ -59,6 +59,7 @@ todas as palavras possíveis para o jogo.
 
 ## Melhorias Futuras
 
+- Terminar implementação dos minijogos e funcionalidade do calenário.
 - Implementação de rankings e estatísticas de desempenho.
 - Integração com serviços online para jogar com amigos.
 - Personalização do tema, interface do jogo e melhorar o perfil.
@@ -122,4 +123,4 @@ incluem:
 ## Considerações Finais
 
 Termix é um jogo divertido e desafiador para fãs de jogos de palavras. Com diferentes modos de jogo
-e um banco de dados local, ele oferece uma experiência dinâmica e viciante para os jogadores.
+e um banco de dados local, ele oferece uma experiência dinâmica offline e viciante para os jogadores.

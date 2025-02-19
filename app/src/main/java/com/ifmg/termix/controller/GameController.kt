@@ -13,6 +13,7 @@ import com.ifmg.termix.repository.WordRepository
 import kotlin.random.Random
 
 import androidx.appcompat.app.AlertDialog
+import com.ifmg.termix.repository.ProfileRepository
 import java.text.Normalizer
 
 // Controlar fluxo e ações do jogo principal e dos minigames
@@ -21,6 +22,7 @@ class GameController(var context: Context) {
     private val wordRepository = WordRepository(context)
     private val playerWordsRepository = PlayerWordsRepository(context)
     private val gameSessionRepository = GameSessionRepository(context)
+    private val profileRepository = ProfileRepository(context)
 
     private val activeGameSessions = mutableMapOf<String, Int>() // Maperar o modo de jogo e id da partida>
 
@@ -107,6 +109,9 @@ class GameController(var context: Context) {
 
         val newStatus = if (win) "vitoria" else "derrota"
         gameSessionRepository.updateGameStatus(gameId, newStatus)
+
+        // Atualiza o perfil do jogador com base no resultado
+        profileRepository.updateGameStats(win)
 
         activeGameSessions.remove(gameMode) // Remover a partida finalizada
     }

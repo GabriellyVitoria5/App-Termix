@@ -2,6 +2,7 @@ package com.ifmg.termix
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -44,7 +45,7 @@ class DailyGame : AppCompatActivity() {
         //Iniciar partida
         startNewGameSession()
 
-        // Registrar eventos
+        // Registrar eventos dos botões
         registerButtonEvents()
 
         // Criar componentes da interface
@@ -59,14 +60,13 @@ class DailyGame : AppCompatActivity() {
     private fun startNewGameSession() {
         val activeGameSession = gameController.getCurrentGameSession(gameMode)
 
+        // Já existe uma partida em andamento, não precisa criar uma nova
         if (activeGameSession != null) {
-            val idSession = gameController.getActiveGameId(gameMode)
-            Toast.makeText(this, "Já existe uma partida ativa de ID $idSession para o modo: $gameMode!", Toast.LENGTH_SHORT).show()
-
+            gameController.getActiveGameId(gameMode)
             return
         }
 
-        // Se não houver uma partida ativa, inicie uma nova
+        // Inicia uma nova partida
         gameController.startNewGameSession(gameMode)
     }
 
@@ -162,19 +162,27 @@ class DailyGame : AppCompatActivity() {
                 keyboardGridController.setEnterButtonEnabled(false)
                 keyboardGridController.disableKeyboard() // TODO corrigir problema visual de ir pra próxima linha depois de ganhar sem bloquear o teclado
 
-                // Jogar novamente
-                dailyGameBinding.answerTxt.setOnClickListener( {
+                // Atualize status do jogo como finalizado
+                gameController.endGameSession(gameMode, true)
+
+                // Jogar novamente ao clicar no botão
+                dailyGameBinding.retryGameBtn.setVisibility(View.VISIBLE)
+                dailyGameBinding.retryGameBtn.setOnClickListener {
                     resetGameUI()
-                })
+                }
             } else if (letterGrid.currentRow == 6) {
                 dailyGameBinding.answerTxt.text = "A resposta certa era: $correctWord"
                 keyboardGridController.setEnterButtonEnabled(false)
                 keyboardGridController.disableKeyboard() // TODO desbloquear teclado depois de resolver o TODO de cima
+                letterGrid.blockRow()
 
-                // Jogar novamente
-                dailyGameBinding.answerTxt.setOnClickListener( {
+                gameController.endGameSession(gameMode, false)
+
+                // Jogar novamente ao clicar no botão
+                dailyGameBinding.retryGameBtn.setVisibility(View.VISIBLE)
+                dailyGameBinding.retryGameBtn.setOnClickListener {
                     resetGameUI()
-                })
+                }
             }
         }
     }
@@ -214,6 +222,9 @@ class DailyGame : AppCompatActivity() {
 
         correctWord = gameController.getRandomWord() // Obter nova palavra da partida
 
+        dailyGameBinding.retryGameBtn.setVisibility(View.INVISIBLE)
+
+        // Limpar grade do teclado e de letras
         letterGrid.clearLetterGrid()
         keyboardGridController.clearKeyboardColors()
 
@@ -223,29 +234,28 @@ class DailyGame : AppCompatActivity() {
         dailyGameBinding.answerTxt.text = ""
     }
 
-    // TODO Parece que o onResume é chamado mesmo quando é uma nova partida, ainda preciso verificar
+    // Voltar o estado de uma partida em andamento
     override fun onResume() {
         super.onResume()
 
-        // Recuperar o estado da última partida do banco de dados
+        // Recuperar o estado da última partida do banco de dados (palavras inseridas pelo usuário e palavra escolhida)
         val gameSession = gameController.getCurrentGameSession(gameMode)
-        //Toast.makeText(this, "Retornando partida $gameSession", Toast.LENGTH_SHORT).show()
 
+        // Verificar se existe uma partida em andamento
         if (gameSession != null) {
             val attemptCount = gameSession.attempt
-            val correctPreviusWord = gameController.getCorrectWord(gameMode)
-            correctWord = correctPreviusWord
-            //Toast.makeText(this, "Tentativas registradas: $attemptCount", Toast.LENGTH_SHORT).show()
+            val previousCorrectWord = gameController.getCorrectWord(gameMode)
+            correctWord = previousCorrectWord
 
-            // Preencher a grade com as palavras já digitadas
+            // Preencher a grade de letras com as palavras já informadas antes e deixar a
             for (row in 0 until attemptCount) {
-                //Toast.makeText(this, "${gameSession.attempt}", Toast.LENGTH_SHORT).show()
                 val guess = gameController.getPlayerWord(gameMode, row)
                 letterGrid.currentRow = row
 
                 if (guess != null) {
                     for (column in 0 until letterGrid.editTextList[row].size) {
                         letterGrid.editTextList[row][column].setText(guess[column].toString())
+                        letterGrid.clearSelection() // Bloquear linha e tirar a selação
                     }
 
                     // Colorir as letras dessa linha
@@ -254,11 +264,17 @@ class DailyGame : AppCompatActivity() {
                 }
             }
 
-            letterGrid.currentRow  += 1
+            // Corrigir problema que não pulava uma linha ao recuperar uma partida
+            if(attemptCount > 0){
+                letterGrid.currentRow  += 1
+            }
+
+            // Colocar uma seleção no começo da linha em que o jogador parou
+            letterGrid.blockRow()
             letterGrid.addSelectionInFirstColumn()
 
-            // Restaurar o teclado com as cores e estados
-            keyboardGridController.restoreKeyboardState(gameSession) // Método para restaurar as cores e ações do teclado
+            // Restaurar o estado do teclado (cores dos botões com base nas respostas anteriores)
+            keyboardGridController.restoreKeyboardState(gameSession)
         }
     }
 

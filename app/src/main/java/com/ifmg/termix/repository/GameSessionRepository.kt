@@ -84,7 +84,7 @@ class GameSessionRepository(context: Context) {
         }
     }
 
-    // Atualizar o status de uma partida: "nao_iniciada", "andamento", "vitoria", "derrota", "terminou"
+    // Atualizar o status de uma partida: "nao_iniciada", "andamento", "vitoria", "derrota", "finalizada"
     fun updateGameStatus(id: Int, newStatus: String): Int {
         val db = database.writableDatabase
         val values = ContentValues().apply {

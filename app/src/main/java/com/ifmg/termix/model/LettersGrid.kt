@@ -75,7 +75,7 @@ class LettersGrid(private val context: Context, private val gridLayout: GridLayo
 
         // Usuário acertou a palavra
         if (userWord == correctWord) {
-            if (currentRow < rows - 1) { // Corrigir problema: jogo estava indo para a próxima e ultrapassava a quantidade de tentativas
+            if (currentRow < rows - 1) { // Corrigir problema: jogo estava indo para a próxima linha e ultrapassava a quantidade de tentativas
                 currentRow++
             }
             return true

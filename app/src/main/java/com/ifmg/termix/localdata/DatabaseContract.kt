@@ -55,7 +55,7 @@ class DatabaseContract {
         const val COLUMN_NAME_MODE = "mode"
         const val COLUMN_NAME_WORD = "word" // Palavra sorteada para o jogo
         const val COLUMN_NAME_ATTEMPT = "attempt"
-        const val COLUMN_NAME_STATUS = "status"
+        const val COLUMN_NAME_STATUS = "status" // "nao_iniciada", "andamento", "vitoria", "derrota", "finalizada"
 
         const val SQL_CREATE = "CREATE TABLE IF NOT EXISTS $TABLE_NAME (" +
                 "$COLUMN_NAME_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +

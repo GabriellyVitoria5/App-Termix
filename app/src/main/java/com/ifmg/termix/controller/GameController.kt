@@ -20,19 +20,19 @@ class GameController(var context: Context) {
 
     // Criar uma nova partida de um minijogo ou jogo diário
     fun startNewGameSession(mode: String) {
-        // Verificar se já existe uma partida em andamento
+
+        // Já existe uma partida em andamento, não criar uma partida nova
         if (gameSessionRepository.isGameInProgress()) {
-            Toast.makeText(context, "Já existe uma partida em andamento!", Toast.LENGTH_SHORT).show()
             return
         }
 
+        // Escolher e validar a palavra secreta da partida
         val chosenWord = getRandomWord()
-
         if (!validateWord(chosenWord)) {
-            Toast.makeText(context, "Erro ao sortear palavra!", Toast.LENGTH_SHORT).show()
             return
         }
 
+        // Criar uma nova partida
         val newGameSession = GameSession(
             id = 0,
             gameDate = System.currentTimeMillis().toString(),
@@ -42,14 +42,10 @@ class GameController(var context: Context) {
             status = "andamento"
         )
 
+        // Iniciar uma nova partida em um modo de jogo
         val gameId = gameSessionRepository.insertGameSession(newGameSession)
-        Toast.makeText(context, "ID: $gameId", Toast.LENGTH_LONG).show()
-
         if (gameId != -1L) {
             activeGameSessions[mode] = gameId.toInt()
-            Toast.makeText(context, "Nova partida ($mode) iniciada!", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(context, "Erro ao iniciar partida ($mode)!", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -87,6 +83,7 @@ class GameController(var context: Context) {
             return
         }
 
+        // Salvar palavra escrita pelo jogador em uma partida
         val playerWord = PlayerWords(
             id = 0,
             gameId = gameId,
@@ -95,19 +92,18 @@ class GameController(var context: Context) {
             gameMode = gameMode
         )
 
-        val resultado = playerWordsRepository.insertPlayerWord(playerWord)
-        Toast.makeText(context, "Palavra salva ($gameMode)! ID: $resultado", Toast.LENGTH_SHORT).show()
+        playerWordsRepository.insertPlayerWord(playerWord)
     }
 
     // Encerrar uma partida específica e atualizar status no banco
-    fun endGameSession(mode: String, win: Boolean) {
-        val gameId = getActiveGameId(mode) ?: return
+    fun endGameSession(gameMode: String, win: Boolean) {
+        val gameId = getActiveGameId(gameMode) ?: return
 
         val newStatus = if (win) "vitoria" else "derrota"
         gameSessionRepository.updateGameStatus(gameId, newStatus)
 
-        Toast.makeText(context, "Partida ($mode) finalizada: $newStatus", Toast.LENGTH_SHORT).show()
-        activeGameSessions.remove(mode) // Remover a partida finalizada
+        Toast.makeText(context, "Partida ($gameMode) finalizada: $newStatus", Toast.LENGTH_SHORT).show()
+        activeGameSessions.remove(gameMode) // Remover a partida finalizada
     }
 
     // Recuperar a partida de jogo ativa para um modo de jogo específico
@@ -123,22 +119,23 @@ class GameController(var context: Context) {
 
     // Recuperar a palavra digitada pelo jogador em uma linha específica
     fun getPlayerWord(gameMode: String, attempt: Int): String? {
-        val gameId = getActiveGameId(gameMode) // Obter o id da partida ativa para o modo
+        val gameId = getActiveGameId(gameMode) // Obter o id da partida ativa de acordo com o modo de jogo
 
+        // Não foi possível encontrar uma partida ativa para esse modo de jogo
         if (gameId == null) {
-            Toast.makeText(context, "Nenhuma partida ativa para o modo: $gameMode!", Toast.LENGTH_SHORT).show()
             return null
         }
 
-        // Buscar as palavras digitadas pelo jogador para a partida ativa e modo específico
+        // Buscar as palavras digitadas pelo jogador na partida em andamento encontrada
         val playerWords = playerWordsRepository.getPlayerWordsByGameId(gameId)
 
         // Buscar a palavra para a linha (tentativa) específica
         val playerWord = playerWords.find { it.attempt == attempt }
 
-        return playerWord?.word // Retorna a palavra ou null se não encontrar
+        return playerWord?.word
     }
 
+    // Recuperar palavras escritas por um jogador em uma partida em andamento
     fun getPlayerWordsForGameSession(gameSessionId: Long): List<PlayerWords> {
         val resultado = playerWordsRepository.getPlayerWordsForGameSession(gameSessionId)
         Toast.makeText(context, "$resultado", Toast.LENGTH_SHORT).show()
@@ -149,9 +146,6 @@ class GameController(var context: Context) {
     fun getCorrectWord(mode: String): String {
         return gameSessionRepository.getCorrectWord(mode)!!
     }
-
-
-
 
 
 }

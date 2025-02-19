@@ -75,7 +75,26 @@ A pasta `res/` contém os recursos gráficos e layouts XML para a interface do j
 
 Para uma melhor visualização do projeto, abaixo estão algumas capturas de tela do jogo:
 
-*(Inserir imagens aqui)*
+1. Tela Inicial:
+![Imagem da tela inicial](screenshots/telaInicial.png)
+
+2. Tela de Perfil:
+![Imagem da tela de perfil](screenshots/perfil.png)
+
+3. Tela de Jogo Diário:
+![Imagem do jogo diário](screenshots/modoDiario.png)
+
+4. Tela de Minijogos:
+![Imagem da tela de minijogos](screenshots/minijogos.png)
+
+5. Tela de regras do Modo Infinito (ainda em desenvolvimento):
+![Imagem das regras do modo Infinito](screenshots/exemploRegras.png)
+
+6. Tela de esboço do Jogo Infinito (ainda em desenvolvimento):
+![Imagem do modo Infinito](screenshots/esbocoModoLimite.png)
+
+7. Tela de regras do Modo Turbo (ainda em desenvolvimento):
+![Imagem das regras do modo turbo](screenshots/regrasModoTurbo.png)
 
 ## Configuração e Build
 

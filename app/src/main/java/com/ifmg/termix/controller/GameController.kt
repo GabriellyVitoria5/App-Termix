@@ -13,6 +13,7 @@ import com.ifmg.termix.repository.WordRepository
 import kotlin.random.Random
 
 import androidx.appcompat.app.AlertDialog
+import java.text.Normalizer
 
 // Controlar fluxo e ações do jogo principal e dos minigames
 class GameController(var context: Context) {
@@ -70,8 +71,8 @@ class GameController(var context: Context) {
 
     // Verificar se a palavra informada pelo usuário está no banco de palavras do jogo
     fun isWordInLocalDatabase(userWord: String): Boolean {
-        val words = wordRepository.getAllWords().map { it.word.uppercase() }
-        return userWord.uppercase() in words
+        val databaseWordsNoAccent = wordRepository.getAllWords().map {  removeLetterAccents(it.word).uppercase()  }
+        return userWord.uppercase() in databaseWordsNoAccent
     }
 
     // Recuperar uma partida ativa de um modo específico
@@ -164,6 +165,12 @@ class GameController(var context: Context) {
         alertCustomdialog.setOnClickListener {
             dialog.dismiss()
         }
+    }
+
+    // Remover acento das palavras do banco
+    fun removeLetterAccents(text: String): String {
+        val normalized = Normalizer.normalize(text, Normalizer.Form.NFD)
+        return normalized.replace("\\p{M}".toRegex(), "")
     }
 
 

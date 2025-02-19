@@ -143,18 +143,21 @@ class InfiniteMinigame : AppCompatActivity() {
         }
 
         // Usuário só pode informar palavras que estão no banco de dados local do jogo
-        /*if (!gameController.isWordInLocalDatabase(guess)) {
+        if (!gameController.isWordInLocalDatabase(guess)) {
             Toast.makeText(this, "Essa palavra não é aceita porque está na nossa lista", Toast.LENGTH_SHORT).show()
             return
-        }*/
+        }
 
         // Salvar a palavra digitada
         gameController.savePlayerWord(gameMode, guess, letterGrid.currentRow)
 
         letterGrid.clearSelection()
 
+        // Remover acento da palavra do banco para verificar corretamente se ela é igual a palavra do usuário
+        val correctWordNoAccent = gameController.removeLetterAccents(correctWord)
+
         if (letterGrid.currentRow < 6) {
-            val isCorrect = letterGrid.confirmWord(correctWord)
+            val isCorrect = letterGrid.confirmWord(correctWordNoAccent)
             keyboardGridController.updateKeyboardColors(guess, correctWord)
 
             // Verificar a resposta e bloquear o botão para não permitir enviar mais palavras
